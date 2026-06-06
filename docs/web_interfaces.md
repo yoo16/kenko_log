@@ -82,6 +82,9 @@
 | 健康 API | グラフ用データ取得 | `/api/health/get/` | GET | — | JSON 配列（`recorded_at`, `weight`, `heart_rate`, `systolic`, `diastolic`）最新30件昇順 |
 | 健康 API | AI 健康アドバイス | `/api/health/ai/` | GET | — | JSON `{ status, advice }` Gemini による分析テキスト |
 | 健康 API | CSV ダウンロード | `/api/health/csv/` | GET | — | `health_records_latest.csv`（最新30件） |
+| 運動 API | グラフ用データ取得 | `/api/activity/get/` | GET | — | JSON 配列（`exercise_date`, `total_calories`, `total_duration`, `record_count`）最新30件昇順・カロリー記録分のみ |
+| 食事 API | AI 栄養予測 | `/api/meal/ai/` | POST | JSON `{ food_name }` | JSON `{ status, calories, protein_g, fat_g, carbohydrate_g }` Gemini による推定値 |
+| 睡眠 API | グラフ用データ取得 | `/api/sleep/get/` | GET | — | JSON 配列（`sleep_date`, `sleep_duration_minutes`, `sleep_quality`）最新30件昇順 |
 | テスト | 疎通確認 | `/api/test/` | GET | — | JSON `{"text": "test"}`、認証不要 |
 
 ---

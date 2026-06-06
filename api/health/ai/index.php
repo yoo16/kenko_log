@@ -6,9 +6,16 @@ use Lib\Database;
 
 header('Content-Type: application/json; charset=utf-8');
 
+// ユーザー認証のチェック
 $user_id = $_SESSION['user']['id'] ?? null;
 if ($user_id === null) {
     echo json_encode(['status' => 'error', 'message' => 'ユーザーが認証されていません。']);
+    exit;
+}
+
+// リクエストメソッドのチェック
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    echo json_encode(['status' => 'error', 'message' => '無効なリクエストメソッドです。']);
     exit;
 }
 
@@ -21,7 +28,7 @@ $sql = "SELECT * FROM health_records
 // プリペアドステートメントを作成
 $stmt = $pdo->prepare($sql);
 // SQLを実行
-$stmt->execute(['user_id' => $user_id]);
+$stmt->execute([':user_id' => $user_id]);
 // 結果を取得
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -40,7 +47,8 @@ try {
     //throw $th;
     // 3. レスポンス整形
     $output = [
-        'status' => $th->getMessage(),
+        'status' => 'error',
+        'message' => $th->getMessage(),
         'advice' => '診断の取得に失敗しました。',
     ];
 }

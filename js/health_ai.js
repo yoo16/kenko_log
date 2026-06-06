@@ -40,13 +40,8 @@ btn.addEventListener('click', async () => {
     try {
         // API URL
         const url = 'api/health/ai/';
-        // TODO: APIにPOSTリクエスト
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
+        // TODO: APIにGETリクエスト
+        const res = await fetch(url);
         if (!res.ok) throw new Error('Network response was not ok');
         // JSONをパース
         const json = await res.json();

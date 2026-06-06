@@ -3,6 +3,7 @@ require_once '../../../app.php';
 
 use Lib\Database;
 
+// ユーザー認証のチェック
 if (empty($_SESSION['user'])) {
     header('Content-Type: application/json');
     echo json_encode([]);

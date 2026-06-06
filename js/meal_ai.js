@@ -34,7 +34,7 @@ aiBtn.addEventListener('click', async () => {
     try {
         // API URL
         const url = 'api/meal/ai/';
-        // TODO: APIにPOSTリクエスト
+        // APIにPOSTリクエスト
         const res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

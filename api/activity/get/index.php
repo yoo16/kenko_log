@@ -10,9 +10,17 @@ if (empty($_SESSION['user'])) {
     exit;
 }
 
-$userId = (int) $_SESSION['user']['id'];
-$pdo    = Database::getInstance();
+// リクエストメソッドのチェック
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    echo json_encode(['status' => 'error', 'message' => '無効なリクエストメソッドです。']);
+    exit;
+}
 
+// ユーザーIDを取得
+$userId = (int) $_SESSION['user']['id'];
+
+// データベース接続
+$pdo    = Database::getInstance();
 // 日別に集計（最新30日分、カロリーが記録されている日のみ）
 $sql = 'SELECT
             exercise_date,

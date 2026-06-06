@@ -4,11 +4,19 @@ require_once '../../../services/GeminiService.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
+// ユーザー認証のチェック
 if (empty($_SESSION['user'])) {
     echo json_encode(['status' => 'error', 'message' => 'ユーザーが認証されていません。']);
     exit;
 }
 
+// リクエストメソッドのチェック
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['status' => 'error', 'message' => '無効なリクエストメソッドです。']);
+    exit;
+}
+
+// リクエストボディから食品名を取得
 $body = json_decode(file_get_contents('php://input'), true);
 $foodName = trim($body['food_name'] ?? '');
 
