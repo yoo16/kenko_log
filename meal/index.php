@@ -58,7 +58,7 @@ function mealTypeLabel(string $mealType): string
                     </p>
                 </div>
 
-                <a href="<?= BASE_URL ?>meal/add.php" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-5 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
+                <a href="meal/add.php" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-5 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
                     新規記録
                 </a>
             </header>
@@ -81,7 +81,7 @@ function mealTypeLabel(string $mealType): string
                             <?php foreach ($records as $row): ?>
                                 <tr class="text-slate-700 transition hover:bg-sky-50/60">
                                     <td class="px-5 py-4">
-                                        <a href="<?= BASE_URL ?>meal/edit.php?id=<?= $row['id'] ?>" class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 transition hover:bg-sky-50">Edit</a>
+                                        <a href="meal/edit.php?id=<?= $row['id'] ?>" class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 transition hover:bg-sky-50">Edit</a>
                                     </td>
                                     <td class="px-5 py-4 font-medium" nowrap="nowrap"><?= htmlspecialchars($row['meal_date']) ?></td>
                                     <td class="px-5 py-4"><?= htmlspecialchars(mealTypeLabel($row['meal_type'])) ?></td>

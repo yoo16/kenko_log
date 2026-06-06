@@ -59,7 +59,7 @@ function findActivity(int $id, int $userId): ?array
             <?php endif; ?>
 
             <?php if ($record): ?>
-                <form action="<?= BASE_URL ?>activity/update.php" method="post" class="space-y-6">
+                <form action="activity/update.php" method="post" class="space-y-6">
                     <input type="hidden" name="id" value="<?= (int) $record['id'] ?>">
 
                     <div>
@@ -104,11 +104,11 @@ function findActivity(int $id, int $userId): ?array
                         <button type="submit" class="w-full rounded-lg kenko-gradient px-6 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
                             更新
                         </button>
-                        <a href="<?= BASE_URL ?>activity/" class="w-full rounded-lg border border-sky-200 bg-white px-6 py-3 text-center text-sm font-bold text-sky-700 transition hover:bg-sky-50">キャンセル</a>
+                        <a href="activity/" class="w-full rounded-lg border border-sky-200 bg-white px-6 py-3 text-center text-sm font-bold text-sky-700 transition hover:bg-sky-50">キャンセル</a>
                     </div>
                 </form>
 
-                <form action="<?= BASE_URL ?>activity/delete.php" method="post" onsubmit="return confirm('この記録を削除してもよろしいですか？');" class="mt-5 text-right">
+                <form action="activity/delete.php" method="post" onsubmit="return confirm('この記録を削除してもよろしいですか？');" class="mt-5 text-right">
                     <input type="hidden" name="id" value="<?= (int) $record['id'] ?>">
                     <button type="submit" class="rounded-lg border border-rose-200 bg-white px-6 py-3 text-sm font-bold text-rose-600 transition hover:bg-rose-50">
                         削除

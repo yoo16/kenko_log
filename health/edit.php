@@ -68,7 +68,7 @@ function find($id, int $userId)
             <?php endif; ?>
 
             <?php if ($record): ?>
-            <form action="<?= BASE_URL ?>health/update.php" method="post" class="space-y-6">
+            <form action="health/update.php" method="post" class="space-y-6">
                 <input type="hidden" name="id" value="<?= $record['id'] ?>">
 
                 <div>
@@ -107,11 +107,11 @@ function find($id, int $userId)
                     <button type="submit" class="w-full rounded-lg kenko-gradient px-6 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
                         更新
                     </button>
-                    <a href="<?= BASE_URL ?>health/" class="w-full rounded-lg border border-sky-200 bg-white px-6 py-3 text-center text-sm font-bold text-sky-700 transition hover:bg-sky-50">キャンセル</a>
+                    <a href="health/" class="w-full rounded-lg border border-sky-200 bg-white px-6 py-3 text-center text-sm font-bold text-sky-700 transition hover:bg-sky-50">キャンセル</a>
                 </div>
             </form>
 
-            <form action="<?= BASE_URL ?>health/delete.php" method="post" onsubmit="return confirm('この記録を削除してもよろしいですか？');" class="mt-5 text-right">
+            <form action="health/delete.php" method="post" onsubmit="return confirm('この記録を削除してもよろしいですか？');" class="mt-5 text-right">
                 <input type="hidden" name="id" value="<?= $record['id'] ?>">
                 <button type="submit" class="rounded-lg border border-rose-200 bg-white px-6 py-3 text-sm font-bold text-rose-600 transition hover:bg-rose-50">
                     削除

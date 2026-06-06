@@ -66,7 +66,7 @@ function get(int $userId, int $limit = 30)
                 </div>
             </header>
 
-            <div id="ai-result" class="rounded-xl border border-sky-100 bg-white p-6 text-sm leading-7 text-slate-700 shadow-sm shadow-sky-100/70">
+            <div id="ai-result" class="hidden rounded-xl border border-sky-100 bg-white p-6 text-sm leading-7 text-slate-700 shadow-sm shadow-sky-100/70">
             </div>
 
             <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -86,7 +86,7 @@ function get(int $userId, int $limit = 30)
                             <?php foreach ($records as $row): ?>
                                 <tr class="text-slate-700 transition hover:bg-sky-50/60">
                                     <td class="px-5 py-4">
-                                        <a href="<?= BASE_URL ?>health/edit.php?id=<?= $row['id'] ?>" class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 transition hover:bg-sky-50">Edit</a>
+                                        <a href="health/edit.php?id=<?= $row['id'] ?>" class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 transition hover:bg-sky-50">Edit</a>
                                     </td>
                                     <td class="px-5 py-4 font-medium" nowrap="nowrap"><?= htmlspecialchars($row['recorded_at']) ?></td>
                                     <td class="px-5 py-4"><?= htmlspecialchars($row['weight']) ?></td>
@@ -103,6 +103,18 @@ function get(int $userId, int $limit = 30)
     </main>
 
     <?php include '../components/footer.php'; ?>
+
+    <!-- AI ローディングモーダル -->
+    <div id="ai-loading-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm">
+        <div class="flex flex-col items-center gap-5 rounded-2xl bg-white px-14 py-10 shadow-2xl">
+            <div class="h-12 w-12 animate-spin rounded-full border-4 border-sky-200 border-t-sky-600"></div>
+            <div class="text-center">
+                <p class="text-sm font-bold text-slate-700">AI 診断中</p>
+                <p class="mt-1 text-xs text-slate-400">少々お待ちください…</p>
+            </div>
+        </div>
+    </div>
+
     <!-- JS -->
     <script src="js/health_ai.js" defer></script>
 </body>

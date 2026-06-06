@@ -41,21 +41,21 @@ $auth_user = $_SESSION['user'] ?? null;
                     </a>
                 </li>
                 <li>
+                    <a href="sleep/" class="relative py-1 transition hover:text-sky-600
+                    after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0
+                    after:bg-sky-500 after:transition-all hover:after:w-full">
+                        睡眠
+                    </a>
+                </li>
+                <li>
                     <a href="logout/" class="relative py-1 transition hover:text-sky-600
                     after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0
                     after:bg-sky-500 after:transition-all hover:after:w-full"
-                    onclick="return confirm('ログアウトしますか？');">
+                        onclick="return confirm('ログアウトしますか？');">
                         ログアウト
                     </a>
                 </li>
             <?php endif ?>
-            <li>
-                <a href="admin/" class="relative py-1 transition hover:text-sky-600
-                    after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0
-                    after:bg-sky-500 after:transition-all hover:after:w-full">
-                    管理者
-                </a>
-            </li>
         </ul>
 
         <!-- CTAボタン -->
@@ -68,7 +68,12 @@ $auth_user = $_SESSION['user'] ?? null;
             <a href="register/"
                 class="rounded-md kenko-gradient px-5 py-2 text-sm font-semibold text-white shadow-sm
                       transition hover:opacity-90">
-                無料で始める
+                ユーザー登録
+            </a>
+            <a href="admin/"
+                class="rounded-md border border-sky-300 px-5 py-2 text-sm font-semibold text-sky-700
+                      transition hover:bg-sky-50">
+                管理者
             </a>
         </div>
 

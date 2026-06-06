@@ -8,15 +8,15 @@ if (empty($_SESSION['user'])) {
     exit;
 }
 
-$records = getActivityRecords((int) $_SESSION['user']['id']);
+$records = getSleepRecords((int) $_SESSION['user']['id']);
 
-function getActivityRecords(int $userId, int $limit = 30): array
+function getSleepRecords(int $userId, int $limit = 30): array
 {
     $pdo = Database::getInstance();
     $stmt = $pdo->prepare(
-        'SELECT * FROM exercise_records
+        'SELECT * FROM sleep_records
          WHERE user_id = :user_id
-         ORDER BY exercise_date DESC, id DESC
+         ORDER BY sleep_date DESC, id DESC
          LIMIT :limit'
     );
     $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
@@ -24,6 +24,20 @@ function getActivityRecords(int $userId, int $limit = 30): array
     $stmt->execute();
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function formatDuration(int $minutes): string
+{
+    $h = intdiv($minutes, 60);
+    $m = $minutes % 60;
+    return $h > 0 ? "{$h}時間{$m}分" : "{$m}分";
+}
+
+function qualityLabel(?int $quality): string
+{
+    if ($quality === null) return '-';
+    $stars = str_repeat('★', $quality) . str_repeat('☆', 5 - $quality);
+    return $stars;
 }
 ?>
 
@@ -39,14 +53,14 @@ function getActivityRecords(int $userId, int $limit = 30): array
         <div class="mx-auto max-w-6xl space-y-8">
             <header class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                 <div>
-                    <p class="text-sm font-semibold text-sky-600">Activity Records</p>
-                    <h1 class="mt-2 text-3xl font-bold text-slate-900">アクティビティ記録</h1>
+                    <p class="text-sm font-semibold text-sky-600">Sleep Records</p>
+                    <h1 class="mt-2 text-3xl font-bold text-slate-900">睡眠記録</h1>
                     <p class="mt-3 text-sm leading-7 text-slate-500">
-                        運動の種類、時間、消費カロリー、距離を記録できます。
+                        就寝・起床時刻と睡眠の質を記録して、睡眠習慣を振り返れます。
                     </p>
                 </div>
 
-                <a href="activity/add.php" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-5 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
+                <a href="sleep/add.php" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-5 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
                     新規記録
                 </a>
             </header>
@@ -58,10 +72,10 @@ function getActivityRecords(int $userId, int $limit = 30): array
                             <tr>
                                 <th class="px-5 py-4 font-semibold"></th>
                                 <th class="px-5 py-4 font-semibold">日付</th>
-                                <th class="px-5 py-4 font-semibold">種類</th>
-                                <th class="px-5 py-4 font-semibold">時間</th>
-                                <th class="px-5 py-4 font-semibold">消費カロリー</th>
-                                <th class="px-5 py-4 font-semibold">距離</th>
+                                <th class="px-5 py-4 font-semibold">就寝</th>
+                                <th class="px-5 py-4 font-semibold">起床</th>
+                                <th class="px-5 py-4 font-semibold">睡眠時間</th>
+                                <th class="px-5 py-4 font-semibold">睡眠の質</th>
                                 <th class="px-5 py-4 font-semibold">メモ</th>
                             </tr>
                         </thead>
@@ -69,19 +83,19 @@ function getActivityRecords(int $userId, int $limit = 30): array
                             <?php foreach ($records as $row): ?>
                                 <tr class="text-slate-700 transition hover:bg-sky-50/60">
                                     <td class="px-5 py-4">
-                                        <a href="activity/edit.php?id=<?= $row['id'] ?>" class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 transition hover:bg-sky-50">Edit</a>
+                                        <a href="sleep/edit.php?id=<?= $row['id'] ?>" class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 transition hover:bg-sky-50">Edit</a>
                                     </td>
-                                    <td class="px-5 py-4 font-medium" nowrap="nowrap"><?= htmlspecialchars($row['exercise_date']) ?></td>
-                                    <td class="px-5 py-4"><?= htmlspecialchars($row['exercise_type']) ?></td>
-                                    <td class="px-5 py-4"><?= (int) $row['duration_minutes'] ?>分</td>
-                                    <td class="px-5 py-4"><?= $row['calories_burned'] !== null ? (int) $row['calories_burned'] . ' kcal' : '-' ?></td>
-                                    <td class="px-5 py-4"><?= $row['distance_km'] !== null ? htmlspecialchars($row['distance_km']) . ' km' : '-' ?></td>
+                                    <td class="px-5 py-4 font-medium" nowrap="nowrap"><?= htmlspecialchars($row['sleep_date']) ?></td>
+                                    <td class="px-5 py-4" nowrap="nowrap"><?= htmlspecialchars(substr($row['bedtime'], 0, 16)) ?></td>
+                                    <td class="px-5 py-4" nowrap="nowrap"><?= htmlspecialchars(substr($row['wake_time'], 0, 16)) ?></td>
+                                    <td class="px-5 py-4"><?= formatDuration((int) $row['sleep_duration_minutes']) ?></td>
+                                    <td class="px-5 py-4 text-amber-400"><?= qualityLabel($row['sleep_quality'] !== null ? (int) $row['sleep_quality'] : null) ?></td>
                                     <td class="px-5 py-4 text-slate-500"><?= htmlspecialchars($row['memo'] ?? '') ?></td>
                                 </tr>
                             <?php endforeach; ?>
                             <?php if (!$records): ?>
                                 <tr>
-                                    <td colspan="7" class="px-5 py-10 text-center text-sm text-slate-500">アクティビティ記録はまだありません。</td>
+                                    <td colspan="7" class="px-5 py-10 text-center text-sm text-slate-500">睡眠記録はまだありません。</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>

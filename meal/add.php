@@ -52,7 +52,7 @@ if (isset($_SESSION['meal_message'])) {
                 </div>
             <?php endif; ?>
 
-            <form action="<?= BASE_URL ?>meal/insert.php" method="post" class="space-y-6">
+            <form action="meal/insert.php" method="post" class="space-y-6">
                 <div>
                     <label class="mb-2 block text-sm font-semibold text-slate-700">食事日</label>
                     <input type="date" name="meal_date" required value="<?= htmlspecialchars($record['meal_date']) ?>"
@@ -111,7 +111,7 @@ if (isset($_SESSION['meal_message'])) {
                     <button type="submit" class="w-full rounded-lg kenko-gradient px-6 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
                         登録
                     </button>
-                    <a href="<?= BASE_URL ?>meal/" class="w-full rounded-lg border border-sky-200 bg-white px-6 py-3 text-center text-sm font-bold text-sky-700 transition hover:bg-sky-50">キャンセル</a>
+                    <a href="meal/" class="w-full rounded-lg border border-sky-200 bg-white px-6 py-3 text-center text-sm font-bold text-sky-700 transition hover:bg-sky-50">キャンセル</a>
                 </div>
             </form>
         </section>

@@ -65,7 +65,7 @@ if (empty($_SESSION['csrf_token'])) {
                     </div>
                 <?php endif; ?>
 
-                <form action="<?= BASE_URL ?>register/store.php" method="post" class="space-y-5">
+                <form action="register/store.php" method="post" class="space-y-5">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
 
                     <div>
@@ -98,7 +98,7 @@ if (empty($_SESSION['csrf_token'])) {
                         <button type="submit" class="w-full rounded-lg kenko-gradient px-6 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
                             登録する
                         </button>
-                        <a href="<?= BASE_URL ?>" class="w-full rounded-lg border border-sky-200 bg-white px-6 py-3 text-center text-sm font-bold text-sky-700 transition hover:bg-sky-50">
+                        <a href="" class="w-full rounded-lg border border-sky-200 bg-white px-6 py-3 text-center text-sm font-bold text-sky-700 transition hover:bg-sky-50">
                             キャンセル
                         </a>
                     </div>

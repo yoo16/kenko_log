@@ -1,41 +1,67 @@
-const btn = document.getElementById('ai-chat-btn');
-const box = document.getElementById('ai-result');
+const btn    = document.getElementById('ai-chat-btn');
+const box    = document.getElementById('ai-result');
+const modal  = document.getElementById('ai-loading-modal');
+
+function showModal() {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function hideModal() {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function addDownloadButton(markdownText) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'mt-5 flex justify-end border-t border-slate-100 pt-4';
+
+    const dlBtn = document.createElement('button');
+    dlBtn.textContent = 'ダウンロード (.md)';
+    dlBtn.className = 'inline-flex items-center gap-2 rounded-lg border border-sky-200 px-4 py-2 text-xs font-semibold text-sky-700 transition hover:bg-sky-50';
+    dlBtn.addEventListener('click', () => {
+        const blob = new Blob([markdownText], { type: 'text/markdown' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href     = url;
+        a.download = `health_ai_${new Date().toISOString().slice(0, 10)}.md`;
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+
+    wrapper.appendChild(dlBtn);
+    box.appendChild(wrapper);
+}
 
 btn.addEventListener('click', async () => {
-    if (!confirm('診断を開始しますか？')) {
-        return;
-    }
+    showModal();
     btn.disabled = true;
-    box.innerHTML = '<p>診断中…少々お待ちください。</p>';
 
     try {
-        const userId = btn.dataset.userId;
-        // API から診断結果を取得
-        const uri = 'api/health/ai/';
-        console.log(uri)
-        const res = await fetch(uri, {
+        const url = 'api/health/ai/';
+        const res = await fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-            }
+                'Content-Type': 'application/json'
+            },
         });
-        if (!res.ok) {
-            throw new Error('Network response was not ok');
-        }
-        // JSONをJavaScriptオブジェクトに変換
+        if (!res.ok) throw new Error('Network response was not ok');
+
         const json = await res.json();
-        console.log(json);
 
         if (json.status === 'ok') {
-            // Markdown を HTML に変換して表示
-            const html = marked.parse(json.advice);
-            box.innerHTML = html;
+            box.innerHTML = marked.parse(json.advice);
+            addDownloadButton(json.advice);
+            box.classList.remove('hidden');
         } else {
             box.innerHTML = '<p class="text-red-600">診断の取得に失敗しました。</p>';
+            box.classList.remove('hidden');
         }
     } catch (e) {
         box.innerHTML = '<p class="text-red-600">通信エラーが発生しました。</p>';
+        box.classList.remove('hidden');
     } finally {
+        hideModal();
         btn.disabled = false;
     }
 });

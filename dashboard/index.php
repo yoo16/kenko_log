@@ -108,7 +108,7 @@ function formatMinutes(?int $minutes): string
                         健康、運動、睡眠、食事の記録をまとめて確認できます。
                     </p>
                 </div>
-                <a href="<?= BASE_URL ?>health/add.php" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-6 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
+                <a href="health/add.php" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-6 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
                     健康記録を追加
                 </a>
             </header>
@@ -167,7 +167,7 @@ function formatMinutes(?int $minutes): string
                             <?php foreach ($dashboard['recent_exercises'] as $exercise): ?>
                                 <div class="flex items-center justify-between rounded-lg bg-slate-50 px-4 py-3">
                                     <div>
-                                        <a href="<?= BASE_URL ?>activity/edit.php?id=<?= $exercise['id'] ?>" class="text-sm font-semibold text-slate-800 transition hover:text-sky-700"><?= htmlspecialchars($exercise['exercise_type']) ?></a>
+                                        <a href="activity/edit.php?id=<?= $exercise['id'] ?>" class="text-sm font-semibold text-slate-800 transition hover:text-sky-700"><?= htmlspecialchars($exercise['exercise_type']) ?></a>
                                         <p class="mt-1 text-xs text-slate-400"><?= htmlspecialchars($exercise['exercise_date']) ?></p>
                                     </div>
                                     <div class="text-right">
