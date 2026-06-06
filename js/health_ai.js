@@ -38,7 +38,9 @@ btn.addEventListener('click', async () => {
     btn.disabled = true;
 
     try {
+        // API URL
         const url = 'api/health/ai/';
+        // TODO: APIにPOSTリクエスト
         const res = await fetch(url, {
             method: 'POST',
             headers: {
@@ -46,7 +48,7 @@ btn.addEventListener('click', async () => {
             },
         });
         if (!res.ok) throw new Error('Network response was not ok');
-
+        // JSONをパース
         const json = await res.json();
 
         if (json.status === 'ok') {

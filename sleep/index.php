@@ -13,12 +13,11 @@ $records = getSleepRecords((int) $_SESSION['user']['id']);
 function getSleepRecords(int $userId, int $limit = 30): array
 {
     $pdo = Database::getInstance();
-    $stmt = $pdo->prepare(
-        'SELECT * FROM sleep_records
-         WHERE user_id = :user_id
-         ORDER BY sleep_date DESC, id DESC
-         LIMIT :limit'
-    );
+    $sql = "SELECT * FROM sleep_records
+                WHERE user_id = :user_id
+                ORDER BY sleep_date DESC, id DESC
+                LIMIT :limit";
+    $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
     $stmt->execute();
@@ -36,6 +35,7 @@ function formatDuration(int $minutes): string
 function qualityLabel(?int $quality): string
 {
     if ($quality === null) return '-';
+    // 0〜5の数値を★で表現
     $stars = str_repeat('★', $quality) . str_repeat('☆', 5 - $quality);
     return $stars;
 }
@@ -64,6 +64,14 @@ function qualityLabel(?int $quality): string
                     新規記録
                 </a>
             </header>
+
+            <!-- 睡眠時間グラフ -->
+            <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-6">
+                <div id="message" class="hidden mb-4 rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600"></div>
+                <div class="relative h-64">
+                    <canvas id="sleepChart"></canvas>
+                </div>
+            </div>
 
             <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                 <div class="overflow-x-auto">
@@ -106,6 +114,7 @@ function qualityLabel(?int $quality): string
     </main>
 
     <?php include '../components/footer.php'; ?>
+    <script src="js/sleep_chart.js"></script>
 </body>
 
 </html>

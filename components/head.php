@@ -3,10 +3,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="<?= BASE_URL ?>">
     <title><?= SITE_TITLE ?></title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- CDN TailwindCSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/tailwind.js"></script>

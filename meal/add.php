@@ -71,32 +71,39 @@ if (isset($_SESSION['meal_message'])) {
                         </select>
                     </div>
                     <div>
-                        <label class="mb-2 block text-sm font-semibold text-slate-700">メニュー</label>
-                        <input type="text" name="food_name" required value="<?= htmlspecialchars($record['food_name']) ?>" placeholder="例: 焼き鮭定食"
+                        <div class="mb-2 flex items-center justify-between">
+                            <label class="text-sm font-semibold text-slate-700">メニュー</label>
+                        </div>
+                        <input type="text" name="food_name" id="food_name" required value="<?= htmlspecialchars($record['food_name']) ?>" placeholder="例: 焼き鮭定食"
                             class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100">
+                        <p id="meal-ai-message" class="mt-2 text-xs"></p>
                     </div>
+                    <button type="button" id="meal-ai-btn"
+                        class="inline-flex items-center gap-1 rounded-md border border-sky-200 px-3 py-2 font-semibold text-sky-700 transition hover:bg-sky-50 disabled:opacity-50">
+                        AI で栄養を予測
+                    </button>
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-semibold text-slate-700">カロリー（kcal）</label>
-                    <input type="number" name="calories" min="0" value="<?= htmlspecialchars($record['calories']) ?>"
+                    <input type="number" name="calories" id="calories" min="0" value="<?= htmlspecialchars($record['calories']) ?>"
                         class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100">
                 </div>
 
                 <div class="grid gap-5 md:grid-cols-3">
                     <div>
                         <label class="mb-2 block text-sm font-semibold text-slate-700">たんぱく質（g）</label>
-                        <input type="number" name="protein_g" min="0" step="0.1" value="<?= htmlspecialchars($record['protein_g']) ?>"
+                        <input type="number" name="protein_g" id="protein_g" min="0" step="0.1" value="<?= htmlspecialchars($record['protein_g']) ?>"
                             class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100">
                     </div>
                     <div>
                         <label class="mb-2 block text-sm font-semibold text-slate-700">脂質（g）</label>
-                        <input type="number" name="fat_g" min="0" step="0.1" value="<?= htmlspecialchars($record['fat_g']) ?>"
+                        <input type="number" name="fat_g" id="fat_g" min="0" step="0.1" value="<?= htmlspecialchars($record['fat_g']) ?>"
                             class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100">
                     </div>
                     <div>
                         <label class="mb-2 block text-sm font-semibold text-slate-700">炭水化物（g）</label>
-                        <input type="number" name="carbohydrate_g" min="0" step="0.1" value="<?= htmlspecialchars($record['carbohydrate_g']) ?>"
+                        <input type="number" name="carbohydrate_g" id="carbohydrate_g" min="0" step="0.1" value="<?= htmlspecialchars($record['carbohydrate_g']) ?>"
                             class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100">
                     </div>
                 </div>
@@ -118,6 +125,7 @@ if (isset($_SESSION['meal_message'])) {
     </main>
 
     <?php include '../components/footer.php'; ?>
+    <script src="js/meal_ai.js" defer></script>
 </body>
 
 </html>

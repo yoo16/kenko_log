@@ -12,6 +12,62 @@ class GeminiService
     ];
 
     /**
+     * 食品名から栄養成分を推定するメソッド
+     * @param  string     $foodName  食品名
+     * @return array|null            ['calories','protein_g','fat_g','carbohydrate_g'] または null
+     */
+    public function chatMeal(string $foodName): ?array
+    {
+        $url = sprintf(
+            '%s%s:generateContent?key=%s',
+            $this->baseURL,
+            GEMINI_MODEL,
+            GEMINI_API_KEY
+        );
+
+        $prompt = implode("\n", [
+            '次の食品の1食あたりの標準的な栄養成分を推定',
+            '結果は以下のJSON形式のみ',
+            '説明文やmarkdownのコードブロックは含めない',
+            '',
+            '食品名: ' . $foodName,
+            '',
+            '{"calories":整数値,"protein_g":小数点1桁数値,"fat_g":小数点1桁数値,"carbohydrate_g":小数点1桁数値}',
+        ]);
+
+        $requestData = [
+            'contents' => [['parts' => [['text' => $prompt]]]]
+        ];
+
+        $this->options['http']['content'] = json_encode($requestData, JSON_UNESCAPED_UNICODE);
+        $context  = stream_context_create($this->options);
+        $response = @file_get_contents($url, false, $context);
+        if ($response === false) {
+            return null;
+        }
+
+        $json = json_decode($response, true);
+        $text = $json['candidates'][0]['content']['parts'][0]['text'] ?? null;
+        if ($text === null) {
+            return null;
+        }
+
+        // Gemini がコードブロックで囲んで返す場合に除去
+        $text = preg_replace('/```(?:json)?\s*([\s\S]*?)```/u', '$1', $text);
+        $data = json_decode(trim($text), true);
+        if (!is_array($data)) {
+            return null;
+        }
+
+        return [
+            'calories'       => isset($data['calories'])       ? (int)   $data['calories']              : null,
+            'protein_g'      => isset($data['protein_g'])      ? round((float) $data['protein_g'],      1) : null,
+            'fat_g'          => isset($data['fat_g'])          ? round((float) $data['fat_g'],          1) : null,
+            'carbohydrate_g' => isset($data['carbohydrate_g']) ? round((float) $data['carbohydrate_g'], 1) : null,
+        ];
+    }
+
+    /**
      * 単一プロンプトでまとめて診断するメソッド
      * @param array  $records  health_records から取得した連想配列の配列
      * @return string|null     Gemini の生成テキスト
@@ -26,7 +82,7 @@ class GeminiService
         );
 
         // プロンプトを組み立て
-        $lines = ["健康記録、体重(kg)、脈拍(bpm)、血圧(mmHg)の全体傾向と、特に注意すべきポイントを３点以内で日本語で教えてください。"];
+        $lines = ["健康記録、体重(kg)、脈拍(bpm)、血圧(mmHg)の全体傾向と、特に注意すべきポイントを日本語で100文字程度で簡潔にまとめて"];
         foreach ($records as $r) {
             $lines[] = sprintf(
                 "%s：%.1fkg、%dbpm、%d/%d",
@@ -49,12 +105,15 @@ class GeminiService
         $this->options['http']['content'] = json_encode($requestData, JSON_UNESCAPED_UNICODE);
         $context = stream_context_create($this->options);
 
+        // API呼び出し
         $response = @file_get_contents($url, false, $context);
         if ($response === false) {
             return null;
         }
 
+        // JSONをデコード
         $json = json_decode($response, true);
+        // テキストデータを返す
         return $json['candidates'][0]['content']['parts'][0]['text'] ?? null;
     }
 }

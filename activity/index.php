@@ -46,9 +46,14 @@ function getActivityRecords(int $userId, int $limit = 30): array
                     </p>
                 </div>
 
-                <a href="activity/add.php" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-5 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
-                    新規記録
-                </a>
+                <div class="flex gap-3">
+                    <a href="<?= BASE_URL ?>activity/chart.php" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
+                        グラフ
+                    </a>
+                    <a href="activity/add.php" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-5 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
+                        新規記録
+                    </a>
+                </div>
             </header>
 
             <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -69,7 +74,13 @@ function getActivityRecords(int $userId, int $limit = 30): array
                             <?php foreach ($records as $row): ?>
                                 <tr class="text-slate-700 transition hover:bg-sky-50/60">
                                     <td class="px-5 py-4">
-                                        <a href="activity/edit.php?id=<?= $row['id'] ?>" class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 transition hover:bg-sky-50">Edit</a>
+                                        <div class="flex items-center gap-2">
+                                            <a href="activity/edit.php?id=<?= $row['id'] ?>" class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 transition hover:bg-sky-50">Edit</a>
+                                            <form action="activity/duplicate.php" method="post">
+                                                <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                                <button type="submit" class="inline-flex rounded-md border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-500 transition hover:border-sky-200 hover:text-sky-700 hover:bg-sky-50">複製</button>
+                                            </form>
+                                        </div>
                                     </td>
                                     <td class="px-5 py-4 font-medium" nowrap="nowrap"><?= htmlspecialchars($row['exercise_date']) ?></td>
                                     <td class="px-5 py-4"><?= htmlspecialchars($row['exercise_type']) ?></td>

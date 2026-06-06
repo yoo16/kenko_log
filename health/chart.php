@@ -22,6 +22,9 @@ require_once '../app.php';
                     </p>
                 </div>
 
+                <!-- メニュー -->
+                <?php include '../components/health/menu.php'; ?>
+
                 <button onclick="downloadChart()" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-5 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
                     グラフダウンロード
                 </button>

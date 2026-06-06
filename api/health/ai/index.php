@@ -43,4 +43,5 @@ try {
     ];
 }
 
+// JSONで出力
 echo json_encode($output, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
