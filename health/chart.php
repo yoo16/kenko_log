@@ -1,0 +1,81 @@
+<?php
+// 共通処理を読み込む
+require_once '../app.php';
+?>
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<?php include '../components/head.php' ?>
+
+<body class="bg-slate-50 text-slate-800">
+    <?php include '../components/nav.php' ?>
+
+    <main class="px-6 py-10 md:px-10">
+        <div class="mx-auto max-w-6xl space-y-8">
+            <header class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+                <div>
+                    <p class="text-sm font-semibold text-sky-600">Health Charts</p>
+                    <h1 class="mt-2 text-3xl font-bold text-slate-900">健康グラフ</h1>
+                    <p class="mt-3 text-sm leading-7 text-slate-500">
+                        体重、心拍数、血圧の推移をグラフで確認できます。
+                    </p>
+                </div>
+
+                <button onclick="downloadChart()" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-5 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
+                    グラフダウンロード
+                </button>
+            </header>
+
+            <div id="message" class="hidden rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700"></div>
+
+            <section class="grid gap-6">
+                <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+                    <div class="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-900">体重</h2>
+                            <p class="mt-1 text-xs text-slate-400">Weight trend</p>
+                        </div>
+                        <span class="text-xs font-semibold text-sky-700">kg</span>
+                    </div>
+                    <div class="h-72 md:h-96">
+                        <canvas id="weightChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+                    <div class="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-900">心拍数</h2>
+                            <p class="mt-1 text-xs text-slate-400">Heart rate trend</p>
+                        </div>
+                        <span class="text-xs font-semibold text-sky-700">bpm</span>
+                    </div>
+                    <div class="h-72 md:h-96">
+                        <canvas id="heartRateChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+                    <div class="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-900">血圧</h2>
+                            <p class="mt-1 text-xs text-slate-400">Blood pressure range</p>
+                        </div>
+                        <span class="text-xs font-semibold text-sky-700">mmHg</span>
+                    </div>
+                    <div class="h-72 md:h-96">
+                        <canvas id="bpChart"></canvas>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <?php include '../components/footer.php'; ?>
+
+    <!-- JS -->
+    <script src="js/health_chart.js" defer></script>
+</body>
+
+</html>

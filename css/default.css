@@ -1,0 +1,45 @@
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+.kenko-gradient {
+    background: linear-gradient(135deg, #1a6ee6 0%, #22d3ee 100%);
+}
+
+.kenko-card {
+    transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+
+.kenko-card:hover {
+    transform: translateY(-2px);
+    color: rgba(0, 148, 254, 0.6)
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-up {
+    animation: fadeUp 0.5s ease both;
+}
+
+.fade-up-1 {
+    animation-delay: 0.05s;
+}
+
+.fade-up-2 {
+    animation-delay: 0.15s;
+}
+
+.fade-up-3 {
+    animation-delay: 0.25s;
+}
