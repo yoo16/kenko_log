@@ -6,5 +6,5 @@ if ($_SESSION['user'] ?? null) {
     unset($_SESSION['user']);
 }
 // ログアウト後はトップページへリダイレクト
-header("Location: /");
+header("Location: " . BASE_URL);
 exit;
