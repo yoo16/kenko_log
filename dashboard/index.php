@@ -18,12 +18,18 @@ function getDashboardData(int $userId): array
     return [
         'latest_health' => fetchOne(
             $pdo,
-            'SELECT * FROM health_records WHERE user_id = :user_id ORDER BY recorded_at DESC LIMIT 1',
+            'SELECT * FROM health_records 
+            WHERE user_id = :user_id 
+            ORDER BY recorded_at DESC 
+            LIMIT 1',
             [':user_id' => $userId]
         ),
         'latest_sleep' => fetchOne(
             $pdo,
-            'SELECT * FROM sleep_records WHERE user_id = :user_id ORDER BY sleep_date DESC LIMIT 1',
+            'SELECT * FROM sleep_records 
+            WHERE user_id = :user_id 
+            ORDER BY sleep_date DESC 
+            LIMIT 1',
             [':user_id' => $userId]
         ),
         'exercise_summary' => fetchOne(
@@ -32,8 +38,8 @@ function getDashboardData(int $userId): array
                 COUNT(*) AS record_count,
                 COALESCE(SUM(duration_minutes), 0) AS total_minutes,
                 COALESCE(SUM(calories_burned), 0) AS total_calories
-             FROM exercise_records
-             WHERE user_id = :user_id',
+            FROM exercise_records
+            WHERE user_id = :user_id',
             [':user_id' => $userId]
         ),
         'meal_summary' => fetchOne(
@@ -41,18 +47,24 @@ function getDashboardData(int $userId): array
             'SELECT
                 COUNT(*) AS record_count,
                 COALESCE(SUM(calories), 0) AS total_calories
-             FROM meal_records
-             WHERE user_id = :user_id',
+            FROM meal_records
+            WHERE user_id = :user_id',
             [':user_id' => $userId]
         ),
         'recent_exercises' => fetchAll(
             $pdo,
-            'SELECT * FROM exercise_records WHERE user_id = :user_id ORDER BY exercise_date DESC, id DESC LIMIT 5',
+            'SELECT * FROM exercise_records 
+            WHERE user_id = :user_id 
+            ORDER BY exercise_date DESC, id DESC 
+            LIMIT 5',
             [':user_id' => $userId]
         ),
         'recent_meals' => fetchAll(
             $pdo,
-            'SELECT * FROM meal_records WHERE user_id = :user_id ORDER BY meal_date DESC, id DESC LIMIT 5',
+            'SELECT * FROM meal_records
+            WHERE user_id = :user_id 
+            ORDER BY meal_date DESC, id DESC 
+            LIMIT 5',
             [':user_id' => $userId]
         ),
     ];

@@ -1,17 +1,17 @@
 <?php
 require_once '../app.php';
 
-$password = 'password123';
-$password_hash = password_hash($password, PASSWORD_DEFAULT);
-
+// エラーメッセージをセッションから取得
 $errors = $_SESSION['login_errors'] ?? [];
+// 成功メッセージをセッションから取得
 $message = $_SESSION['login_message'] ?? '';
-$old = $_SESSION['login_old'] ?? [
-    'email' => '',
-];
+// 古い入力値を取得（なければ空の配列）
+$old = $_SESSION['login_old'] ?? [ 'email' => '', ];
 
+// セッションのエラーメッセージ、成功メッセージ、古い入力値をクリア
 unset($_SESSION['login_errors'], $_SESSION['login_message'], $_SESSION['login_old']);
 
+// CSRFトークンを生成してセッションに保存（なければ）
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }

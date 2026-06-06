@@ -18,15 +18,17 @@ $sql = "SELECT * FROM health_records
             WHERE user_id = :user_id
             ORDER BY recorded_at 
             ASC LIMIT 30";
-
+// プリペアドステートメントを作成
 $stmt = $pdo->prepare($sql);
+// SQLを実行
 $stmt->execute(['user_id' => $user_id]);
+// 結果を取得
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 
 // 2. AI診断
 try {
     $service = new GeminiService();
+    // AIに健康診断を依頼
     $advice = $service->chatHealth($data);
 
     // 3. レスポンス整形

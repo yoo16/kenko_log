@@ -16,7 +16,10 @@ function get(int $userId, int $limit = 30)
     // データベース接続
     $pdo = Database::getInstance();
     // SQLクエリ
-    $sql = "SELECT * FROM health_records WHERE user_id = :user_id ORDER BY recorded_at DESC LIMIT :limit";
+    $sql = "SELECT * FROM health_records 
+                WHERE user_id = :user_id 
+                ORDER BY recorded_at DESC 
+                LIMIT :limit";
     // プリペアドステートメントを作成
     $stmt = $pdo->prepare($sql);
     // SQLを実行

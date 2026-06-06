@@ -61,31 +61,31 @@ function validateMealPosts(array $posts): string
 function insertMeal(int $userId, array $posts): void
 {
     $pdo = Database::getInstance();
-    $stmt = $pdo->prepare(
-        'INSERT INTO meal_records (
-            user_id,
-            meal_date,
-            meal_type,
-            food_name,
-            calories,
-            protein_g,
-            fat_g,
-            carbohydrate_g,
-            memo
-        ) VALUES (
-            :user_id,
-            :meal_date,
-            :meal_type,
-            :food_name,
-            :calories,
-            :protein_g,
-            :fat_g,
-            :carbohydrate_g,
-            :memo
-        )'
-    );
-
-    $stmt->execute([
+    $sql = 'INSERT INTO meal_records (
+                user_id,
+                meal_date,
+                meal_type,
+                food_name,
+                calories,
+                protein_g,
+                fat_g,
+                carbohydrate_g,
+                memo
+            ) VALUES (
+                :user_id,
+                :meal_date,
+                :meal_type,
+                :food_name,
+                :calories,
+                :protein_g,
+                :fat_g,
+                :carbohydrate_g,
+                :memo
+            )';
+    // プリペアドステートメントを作成
+    $stmt = $pdo->prepare($sql);
+    // バインドするデータを準備
+    $data = [
         ':user_id' => $userId,
         ':meal_date' => $posts['meal_date'],
         ':meal_type' => $posts['meal_type'],
@@ -95,5 +95,7 @@ function insertMeal(int $userId, array $posts): void
         ':fat_g' => $posts['fat_g'] === '' ? null : $posts['fat_g'],
         ':carbohydrate_g' => $posts['carbohydrate_g'] === '' ? null : $posts['carbohydrate_g'],
         ':memo' => $posts['memo'] === '' ? null : $posts['memo'],
-    ]);
+    ];
+    // SQLを実行
+    $stmt->execute($data);
 }

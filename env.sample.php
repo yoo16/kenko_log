@@ -10,4 +10,4 @@ const DB_CHARSET = 'utf8mb4';
 
 // Google Gemini APIキー
 const GEMINI_API_KEY = 'API KEYをここに入力';
-const GEMINI_MODEL = 'gemini-2.5-flash';
+const GEMINI_MODEL = 'gemini-2.5-flash-lite';

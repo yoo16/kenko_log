@@ -59,26 +59,26 @@ function validateActivityPosts(array $posts): string
 function insertActivity(int $userId, array $posts): void
 {
     $pdo = Database::getInstance();
-    $stmt = $pdo->prepare(
-        'INSERT INTO exercise_records (
-            user_id,
-            exercise_date,
-            exercise_type,
-            duration_minutes,
-            calories_burned,
-            distance_km,
-            memo
-        ) VALUES (
-            :user_id,
-            :exercise_date,
-            :exercise_type,
-            :duration_minutes,
-            :calories_burned,
-            :distance_km,
-            :memo
-        )'
-    );
-
+    $sql = 'INSERT INTO exercise_records (
+                user_id,
+                exercise_date,
+                exercise_type,
+                duration_minutes,
+                calories_burned,
+                distance_km,
+                memo
+            ) VALUES (
+                :user_id,
+                :exercise_date,
+                :exercise_type,
+                :duration_minutes,
+                :calories_burned,
+                :distance_km,
+                :memo
+            )';
+    // プリペアドステートメントの準備
+    $stmt = $pdo->prepare($sql);
+    // SQLの実行
     $stmt->execute([
         ':user_id' => $userId,
         ':exercise_date' => $posts['exercise_date'],

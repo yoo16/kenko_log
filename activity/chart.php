@@ -27,7 +27,7 @@ if (empty($_SESSION['user'])) {
                 </div>
 
                 <div class="flex gap-3">
-                    <a href="<?= BASE_URL ?>activity/" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-orange-200 hover:text-orange-600">
+                    <a href="activity/" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-orange-200 hover:text-orange-600">
                         一覧に戻る
                     </a>
                     <button onclick="downloadChart()" class="inline-flex items-center justify-center rounded-lg bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-md shadow-orange-200 transition hover:bg-orange-600">

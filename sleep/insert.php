@@ -73,30 +73,30 @@ function calcDurationMinutes(string $bedtime, string $wakeTime): int
 function insertSleep(int $userId, array $posts): void
 {
     $pdo = Database::getInstance();
-    $stmt = $pdo->prepare(
-        'INSERT INTO sleep_records (
-            user_id,
-            sleep_date,
-            bedtime,
-            wake_time,
-            sleep_duration_minutes,
-            sleep_quality,
-            memo
-        ) VALUES (
-            :user_id,
-            :sleep_date,
-            :bedtime,
-            :wake_time,
-            :sleep_duration_minutes,
-            :sleep_quality,
-            :memo
-        )'
-    );
-
+    $sql = 'INSERT INTO sleep_records (
+                user_id,
+                sleep_date,
+                bedtime,
+                wake_time,
+                sleep_duration_minutes,
+                sleep_quality,
+                memo
+            ) VALUES (
+                :user_id,
+                :sleep_date,
+                :bedtime,
+                :wake_time,
+                :sleep_duration_minutes,
+                :sleep_quality,
+                :memo
+            )';
+    // プリペアドステートメント
+    $stmt = $pdo->prepare($sql);
     // datetime-local の値（Y-m-dTH:i）を MySQL DATETIME 形式に変換
     $bedtime  = str_replace('T', ' ', $posts['bedtime']) . ':00';
     $wakeTime = str_replace('T', ' ', $posts['wake_time']) . ':00';
 
+    // SQLの実行
     $stmt->execute([
         ':user_id'               => $userId,
         ':sleep_date'            => $posts['sleep_date'],

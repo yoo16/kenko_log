@@ -13,15 +13,16 @@ $records = getMealRecords((int) $_SESSION['user']['id']);
 function getMealRecords(int $userId, int $limit = 30): array
 {
     $pdo = Database::getInstance();
-    $stmt = $pdo->prepare(
-        'SELECT * FROM meal_records
-         WHERE user_id = :user_id
-         ORDER BY meal_date DESC, id DESC
-         LIMIT :limit'
-    );
-    $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->execute();
+    $sql = 'SELECT * FROM meal_records 
+                WHERE user_id = :user_id 
+                ORDER BY meal_date DESC, id DESC 
+                LIMIT :limit';
+    $stmt = $pdo->prepare($sql);
+    // SQLを実行
+    $stmt->execute([
+        ':user_id' => $userId,
+        ':limit' => $limit
+    ]);
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }

@@ -9,7 +9,7 @@ if (empty($_SESSION['user'])) {
     exit;
 }
 
-$body     = json_decode(file_get_contents('php://input'), true);
+$body = json_decode(file_get_contents('php://input'), true);
 $foodName = trim($body['food_name'] ?? '');
 
 if ($foodName === '') {
@@ -19,6 +19,7 @@ if ($foodName === '') {
 
 try {
     $service = new GeminiService();
+    // AIに栄養成分の推定を依頼
     $result  = $service->chatMeal($foodName);
 
     if ($result === null) {

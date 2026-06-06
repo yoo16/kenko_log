@@ -8,15 +8,19 @@ if (empty($_SESSION['user'])) {
     exit;
 }
 
+// IDを取得して整数に変換
 $id = (int) ($_GET['id'] ?? 0);
+// アクティビティを取得
 $record = findActivity($id, (int) $_SESSION['user']['id']);
 $message = $record ? '' : '該当する記録が見つかりません。';
 
+// セッションに保存されたメッセージがあれば取得してクリア
 if (isset($_SESSION['activity_message'])) {
     $message = $_SESSION['activity_message'];
     unset($_SESSION['activity_message']);
 }
 
+// セッションに保存されたフォームデータがあれば、取得して既存のレコードとマージ
 if (isset($_SESSION['activity_form']) && $record) {
     $record = array_merge($record, $_SESSION['activity_form']);
     unset($_SESSION['activity_form']);
@@ -25,11 +29,15 @@ if (isset($_SESSION['activity_form']) && $record) {
 function findActivity(int $id, int $userId): ?array
 {
     $pdo = Database::getInstance();
-    $stmt = $pdo->prepare('SELECT * FROM exercise_records WHERE id = :id AND user_id = :user_id LIMIT 1');
+    $sql = 'SELECT * FROM exercise_records WHERE id = :id AND user_id = :user_id LIMIT 1';
+    // プリペアドステートメント
+    $stmt = $pdo->prepare($sql);
+    // SQLの実行
     $stmt->execute([
         ':id' => $id,
         ':user_id' => $userId,
     ]);
+    // レコードを取得
     $record = $stmt->fetch(PDO::FETCH_ASSOC);
 
     return $record ?: null;

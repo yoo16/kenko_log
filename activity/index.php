@@ -15,9 +15,9 @@ function getActivityRecords(int $userId, int $limit = 30): array
     $pdo = Database::getInstance();
     $stmt = $pdo->prepare(
         'SELECT * FROM exercise_records
-         WHERE user_id = :user_id
-         ORDER BY exercise_date DESC, id DESC
-         LIMIT :limit'
+            WHERE user_id = :user_id
+            ORDER BY exercise_date DESC, id DESC
+            LIMIT :limit'
     );
     $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -47,7 +47,7 @@ function getActivityRecords(int $userId, int $limit = 30): array
                 </div>
 
                 <div class="flex gap-3">
-                    <a href="<?= BASE_URL ?>activity/chart.php" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
+                    <a href="activity/chart.php" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
                         グラフ
                     </a>
                     <a href="activity/add.php" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-5 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">

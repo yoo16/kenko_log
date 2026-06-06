@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $id = (int) ($_POST['id'] ?? 0);
-$posts = normalizeMealPosts($_POST);
+$posts = $_POST;
 $_SESSION['meal_form'] = $posts;
 
 $message = validateMealPosts($posts);
@@ -34,20 +34,6 @@ unset($_SESSION['meal_form']);
 header('Location: ' . BASE_URL . 'meal/');
 exit;
 
-function normalizeMealPosts(array $posts): array
-{
-    return [
-        'meal_date' => trim($posts['meal_date'] ?? ''),
-        'meal_type' => trim($posts['meal_type'] ?? ''),
-        'food_name' => trim($posts['food_name'] ?? ''),
-        'calories' => trim($posts['calories'] ?? ''),
-        'protein_g' => trim($posts['protein_g'] ?? ''),
-        'fat_g' => trim($posts['fat_g'] ?? ''),
-        'carbohydrate_g' => trim($posts['carbohydrate_g'] ?? ''),
-        'memo' => trim($posts['memo'] ?? ''),
-    ];
-}
-
 function validateMealPosts(array $posts): string
 {
     if ($posts['meal_date'] === '') {
@@ -66,21 +52,21 @@ function validateMealPosts(array $posts): string
 function updateMeal(int $id, int $userId, array $posts): void
 {
     $pdo = Database::getInstance();
-    $stmt = $pdo->prepare(
-        'UPDATE meal_records
-         SET
-            meal_date = :meal_date,
-            meal_type = :meal_type,
-            food_name = :food_name,
-            calories = :calories,
-            protein_g = :protein_g,
-            fat_g = :fat_g,
-            carbohydrate_g = :carbohydrate_g,
-            memo = :memo
-         WHERE id = :id AND user_id = :user_id'
-    );
-
-    $stmt->execute([
+    $sql = 'UPDATE meal_records
+            SET
+                meal_date = :meal_date,
+                meal_type = :meal_type,
+                food_name = :food_name,
+                calories = :calories,
+                protein_g = :protein_g,
+                fat_g = :fat_g,
+                carbohydrate_g = :carbohydrate_g,
+                memo = :memo
+            WHERE id = :id AND user_id = :user_id';
+    // プリペアドステートメントを作成
+    $stmt = $pdo->prepare($sql);
+    // バインドするデータを準備
+    $data = [
         ':meal_date' => $posts['meal_date'],
         ':meal_type' => $posts['meal_type'],
         ':food_name' => $posts['food_name'],
@@ -91,5 +77,7 @@ function updateMeal(int $id, int $userId, array $posts): void
         ':memo' => $posts['memo'] === '' ? null : $posts['memo'],
         ':id' => $id,
         ':user_id' => $userId,
-    ]);
+    ];
+    // SQLを実行
+    $stmt->execute($data);
 }

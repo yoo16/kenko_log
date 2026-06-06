@@ -24,7 +24,7 @@ class GeminiService
             GEMINI_MODEL,
             GEMINI_API_KEY
         );
-
+        // プロンプトを組み立て
         $prompt = implode("\n", [
             '次の食品の1食あたりの標準的な栄養成分を推定',
             '結果は以下のJSON形式のみ',
@@ -34,36 +34,42 @@ class GeminiService
             '',
             '{"calories":整数値,"protein_g":小数点1桁数値,"fat_g":小数点1桁数値,"carbohydrate_g":小数点1桁数値}',
         ]);
-
+        // リクエストボディ作成
         $requestData = [
             'contents' => [['parts' => [['text' => $prompt]]]]
         ];
-
+        // JSONエンコードしてHTTPリクエストのコンテキストを作成
         $this->options['http']['content'] = json_encode($requestData, JSON_UNESCAPED_UNICODE);
         $context  = stream_context_create($this->options);
+        // Gemini API呼び出し
         $response = @file_get_contents($url, false, $context);
         if ($response === false) {
             return null;
         }
-
+        // JSONをデコードしてテキストを抽出
         $json = json_decode($response, true);
         $text = $json['candidates'][0]['content']['parts'][0]['text'] ?? null;
         if ($text === null) {
             return null;
         }
-
         // Gemini がコードブロックで囲んで返す場合に除去
         $text = preg_replace('/```(?:json)?\s*([\s\S]*?)```/u', '$1', $text);
+        // JSONデコードして配列に変換
         $data = json_decode(trim($text), true);
-        if (!is_array($data)) {
-            return null;
-        }
+        // データが配列でない場合は null を返す
+        if (!is_array($data)) return null;
+        // 各データを検査
+        $calories = isset($data['calories']) ? (int) $data['calories'] : null;
+        $protein  = isset($data['protein_g']) ? round((float) $data['protein_g'], 1) : null;
+        $fat      = isset($data['fat_g']) ? round((float) $data['fat_g'], 1) : null;
+        $carb     = isset($data['carbohydrate_g']) ? round((float) $data['carbohydrate_g'], 1) : null;
 
+        // 各値を返す
         return [
-            'calories'       => isset($data['calories'])       ? (int)   $data['calories']              : null,
-            'protein_g'      => isset($data['protein_g'])      ? round((float) $data['protein_g'],      1) : null,
-            'fat_g'          => isset($data['fat_g'])          ? round((float) $data['fat_g'],          1) : null,
-            'carbohydrate_g' => isset($data['carbohydrate_g']) ? round((float) $data['carbohydrate_g'], 1) : null,
+            'calories'       => $calories,
+            'protein_g'      => $protein,
+            'fat_g'          => $fat,
+            'carbohydrate_g' => $carb,
         ];
     }
 
@@ -80,7 +86,6 @@ class GeminiService
             GEMINI_MODEL,
             GEMINI_API_KEY
         );
-
         // プロンプトを組み立て
         $lines = ["健康記録、体重(kg)、脈拍(bpm)、血圧(mmHg)の全体傾向と、特に注意すべきポイントを日本語で100文字程度で簡潔にまとめて"];
         foreach ($records as $r) {
@@ -101,11 +106,11 @@ class GeminiService
                 ['parts' => [['text' => $prompt]]]
             ]
         ];
-
+        // JSONエンコードしてHTTPリクエストのコンテキストを作成
         $this->options['http']['content'] = json_encode($requestData, JSON_UNESCAPED_UNICODE);
         $context = stream_context_create($this->options);
 
-        // API呼び出し
+        // Gemini API呼び出し
         $response = @file_get_contents($url, false, $context);
         if ($response === false) {
             return null;

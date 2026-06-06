@@ -13,11 +13,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// IDを取得して整数に変換
 $id = (int) ($_POST['id'] ?? 0);
 
 if ($id > 0) {
     $pdo = Database::getInstance();
-    $stmt = $pdo->prepare('DELETE FROM exercise_records WHERE id = :id AND user_id = :user_id');
+    $sql = 'DELETE FROM exercise_records WHERE id = :id AND user_id = :user_id';
+    // プリペアドステートメント
+    $stmt = $pdo->prepare($sql);
+    // SQLの実行
     $stmt->execute([
         ':id' => $id,
         ':user_id' => (int) $_SESSION['user']['id'],
