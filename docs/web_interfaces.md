@@ -60,6 +60,22 @@
 
 ---
 
+## 睡眠記録（認証必須）
+
+| カテゴリ | 項目 | エンドポイント | メソッド | パラメータ | 備考 |
+|---|---|---|---|---|---|
+| 睡眠記録 | 一覧 | `/sleep/` | GET | — | 就寝・起床・睡眠時間・睡眠の質を表示 |
+| 睡眠記録 | 追加フォーム | `/sleep/add.php` | GET | — | — |
+| 睡眠記録 | 追加処理 | `/sleep/insert.php` | POST | `sleep_date`, `bedtime`, `wake_time`, `sleep_duration_minutes`, `sleep_quality`*, `memo`* | — |
+| 睡眠記録 | 編集フォーム | `/sleep/edit.php` | GET | `id`（クエリ） | — |
+| 睡眠記録 | 更新処理 | `/sleep/update.php` | POST | `id`, `sleep_date`, `bedtime`, `wake_time`, `sleep_duration_minutes`, `sleep_quality`*, `memo`* | — |
+| 睡眠記録 | 削除処理 | `/sleep/delete.php` | POST | `id` | — |
+| 睡眠記録 | グラフ表示 | `/sleep/chart.php` | GET | — | 睡眠時間の推移グラフ、画像ダウンロード可 |
+
+*: 任意項目
+
+---
+
 ## 食事記録（認証必須）
 
 | カテゴリ | 項目 | エンドポイント | メソッド | パラメータ | 備考 |
@@ -85,6 +101,7 @@
 | 運動 API | グラフ用データ取得 | `/api/activity/get/` | GET | — | JSON 配列（`exercise_date`, `total_calories`, `total_duration`, `record_count`）最新30件昇順・カロリー記録分のみ |
 | 食事 API | AI 栄養予測 | `/api/meal/ai/` | POST | JSON `{ food_name }` | JSON `{ status, calories, protein_g, fat_g, carbohydrate_g }` Gemini による推定値 |
 | 睡眠 API | グラフ用データ取得 | `/api/sleep/get/` | GET | — | JSON 配列（`sleep_date`, `sleep_duration_minutes`, `sleep_quality`）最新30件昇順 |
+| ダッシュボード API | サマリーデータ取得 | `/api/dashboard/` | GET | — | JSON `{ status, user, latest_health, latest_sleep, exercise_summary, meal_summary, recent_exercises, recent_meals }` |
 | テスト | 疎通確認 | `/api/test/` | GET | — | JSON `{"text": "test"}`、認証不要 |
 
 ---

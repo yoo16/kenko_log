@@ -60,18 +60,18 @@ function qualityLabel(?int $quality): string
                     </p>
                 </div>
 
-                <a href="sleep/add.php" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-5 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
-                    新規記録
-                </a>
-            </header>
-
-            <!-- 睡眠時間グラフ -->
-            <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-6">
-                <div id="message" class="hidden mb-4 rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600"></div>
-                <div class="relative h-64">
-                    <canvas id="sleepChart"></canvas>
+                <div class="flex flex-col gap-3 sm:flex-row">
+                    <a href="sleep/add.php" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-5 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
+                        新規記録
+                    </a>
+                    <a href="sleep/" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
+                        記録
+                    </a>
+                    <a href="sleep/chart.php" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
+                        グラフ
+                    </a>
                 </div>
-            </div>
+            </header>
 
             <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                 <div class="overflow-x-auto">
@@ -114,7 +114,6 @@ function qualityLabel(?int $quality): string
     </main>
 
     <?php include '../components/footer.php'; ?>
-    <script src="js/sleep_chart.js"></script>
 </body>
 
 </html>

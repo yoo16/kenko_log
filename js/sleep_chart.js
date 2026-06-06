@@ -123,6 +123,22 @@ async function renderSleepChart() {
     }
 }
 
+function downloadChart() {
+    const canvas = document.getElementById('sleepChart');
+    const combined = document.createElement('canvas');
+    combined.width  = canvas.width;
+    combined.height = canvas.height;
+    const ctx = combined.getContext('2d');
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, combined.width, combined.height);
+    ctx.drawImage(canvas, 0, 0);
+
+    const link = document.createElement('a');
+    link.href     = combined.toDataURL('image/png');
+    link.download = 'sleep_chart.png';
+    link.click();
+}
+
 function showMessage(msg) {
     message.classList.remove('hidden');
     message.innerText = msg;
