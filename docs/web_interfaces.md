@@ -40,6 +40,7 @@
 | 健康記録 | 更新処理 | `/health/update.php` | POST | `id`, `recorded_at`, `weight`, `heart_rate`, `systolic`*, `diastolic`* | 同日の別レコードがある場合はエラー |
 | 健康記録 | 削除処理 | `/health/delete.php` | POST | `id` | — |
 | 健康記録 | グラフ表示 | `/health/chart.php` | GET | — | 体重・心拍数・血圧の推移グラフ、画像ダウンロード可 |
+| 健康記録 | AI診断履歴 | `/health/ai_history.php` | GET | — | AI診断結果の一覧、最新50件 |
 
 *: 任意項目
 
@@ -98,6 +99,7 @@
 | 健康 API | グラフ用データ取得 | `/api/health/get/` | GET | — | JSON 配列（`recorded_at`, `weight`, `heart_rate`, `systolic`, `diastolic`）最新30件昇順 |
 | 健康 API | AI 健康アドバイス | `/api/health/ai/` | GET | — | JSON `{ status, advice }` Gemini による分析テキスト |
 | 健康 API | CSV ダウンロード | `/api/health/csv/` | GET | — | `health_records_latest.csv`（最新30件） |
+| 健康 API | AI診断履歴 CSV | `/api/health/ai/csv/` | GET | — | `ai_diagnosis_history.csv`（全件降順） |
 | 運動 API | グラフ用データ取得 | `/api/activity/get/` | GET | — | JSON 配列（`exercise_date`, `total_calories`, `total_duration`, `record_count`）最新30件昇順・カロリー記録分のみ |
 | 食事 API | AI 栄養予測 | `/api/meal/ai/` | POST | JSON `{ food_name }` | JSON `{ status, calories, protein_g, fat_g, carbohydrate_g }` Gemini による推定値 |
 | 睡眠 API | グラフ用データ取得 | `/api/sleep/get/` | GET | — | JSON 配列（`sleep_date`, `sleep_duration_minutes`, `sleep_quality`）最新30件昇順 |

@@ -94,8 +94,14 @@ function escHtml(str) {
 async function loadDashboard() {
     showSkeleton(true);
     try {
-        const res = await fetch('api/dashboard/');
-        if (!res.ok) throw new Error();
+        const url = 'api/dashboard/';
+        // APIからデータを取得
+        const res = await fetch(url);
+        if (!res.ok) {
+            showMessage(`API通信エラー: ${url}`);
+            return;
+        }
+        // JSONをパースして返す
         const data = await res.json();
         if (data.status !== 'ok') throw new Error();
 

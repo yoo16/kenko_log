@@ -68,9 +68,15 @@ function get(int $userId, int $limit = 30)
                     <a id="ai-chat-btn" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
                         AI分析
                     </a>
+                    <a href="health/ai_history.php" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
+                        AI履歴
+                    </a>
                 </div>
             </header>
-
+    
+            <!-- メッセージ表示 -->
+            <?php include '../components/message.php'; ?>
+            <!-- AI結果表示 -->
             <div id="ai-result" class="hidden rounded-xl border border-sky-100 bg-white p-6 text-sm leading-7 text-slate-700 shadow-sm shadow-sky-100/70">
             </div>
 

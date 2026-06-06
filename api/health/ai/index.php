@@ -35,8 +35,19 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // 2. AI診断
 try {
     $service = new GeminiService();
-    // AIに健康診断を依頼
-    $advice = $service->chatHealth($data);
+    $advice  = $service->chatHealth($data);
+
+    if ($advice !== null) {
+        $stmt = $pdo->prepare(
+            'INSERT INTO ai_diagnosis_logs (user_id, diagnosis_type, result)
+             VALUES (:user_id, :diagnosis_type, :result)'
+        );
+        $stmt->execute([
+            ':user_id'        => $user_id,
+            ':diagnosis_type' => 'health',
+            ':result'         => $advice,
+        ]);
+    }
 
     // 3. レスポンス整形
     $output = [
@@ -44,8 +55,6 @@ try {
         'advice' => $advice ?? '診断の取得に失敗しました。',
     ];
 } catch (\Throwable $th) {
-    //throw $th;
-    // 3. レスポンス整形
     $output = [
         'status' => 'error',
         'message' => $th->getMessage(),

@@ -1,5 +1,3 @@
-const message = document.getElementById('message');
-
 const themeColor = "rgba(0, 148, 254, 0.6)";
 const optimalColor = "rgba(99, 149, 255, 0.12)";
 const dangerColor = "rgba(249, 150, 150, 0.6)";
@@ -139,11 +137,3 @@ function downloadChart() {
     link.click();
 }
 
-function showMessage(msg) {
-    message.classList.remove('hidden');
-    message.innerText = msg;
-    setTimeout(() => {
-        message.classList.add('hidden');
-        message.innerText = '';
-    }, 3000);
-}

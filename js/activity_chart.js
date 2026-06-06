@@ -1,4 +1,3 @@
-const message   = document.getElementById('message');
 const themeColor = 'rgba(249, 115, 22, 0.75)';   // orange-500
 const fillColor  = 'rgba(249, 115, 22, 0.10)';
 const goalColor  = 'rgba(99, 149, 255, 0.55)';    // 目標ライン
@@ -161,11 +160,3 @@ function downloadChart() {
     link.click();
 }
 
-function showMessage(msg) {
-    message.classList.remove('hidden');
-    message.innerText = msg;
-    setTimeout(() => {
-        message.classList.add('hidden');
-        message.innerText = '';
-    }, 3000);
-}

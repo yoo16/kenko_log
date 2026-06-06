@@ -2,17 +2,30 @@
 // 共通処理を読み込む
 require_once '../app.php';
 
+use Lib\Database;
+
 if (empty($_SESSION['user'])) {
     header('Location: ' . BASE_URL . 'login/');
     exit;
 }
 
-// 初期値
+// 最新の記録を初期値として取得
+$pdo  = Database::getInstance();
+$stmt = $pdo->prepare(
+    'SELECT weight, heart_rate, systolic, diastolic
+     FROM health_records
+     WHERE user_id = :user_id
+     ORDER BY recorded_at DESC
+     LIMIT 1'
+);
+$stmt->execute([':user_id' => (int) $_SESSION['user']['id']]);
+$latest = $stmt->fetch(PDO::FETCH_ASSOC);
+
 $record = [
-    'weight' => 50,
-    'heart_rate' => 80,
-    'systolic' => 120,
-    'diastolic' => 80,
+    'weight'      => $latest['weight']     ?? 50,
+    'heart_rate'  => $latest['heart_rate'] ?? 80,
+    'systolic'    => $latest['systolic']   ?? 120,
+    'diastolic'   => $latest['diastolic']  ?? 80,
     'recorded_at' => date('Y-m-d'),
 ];
 

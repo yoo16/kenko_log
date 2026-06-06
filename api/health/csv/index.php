@@ -38,7 +38,7 @@ $csv_file = 'health_records_latest.csv';
 header("Content-Type: text/csv; charset=utf-8");
 header("Content-Disposition: attachment; filename={$csv_file}");
 
-// CSVのヘッダー行
+fwrite($output, "\xEF\xBB\xBF");
 fputcsv($output, ['recorded_at', 'weight', 'heart_rate', 'systolic', 'diastolic'], ',', '"', '\\');
 // CSVのデータ行
 foreach ($rows as $row) {

@@ -3,6 +3,7 @@ CREATE DATABASE health_tracker CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS ai_diagnosis_logs;
 DROP TABLE IF EXISTS meal_records;
 DROP TABLE IF EXISTS sleep_records;
 DROP TABLE IF EXISTS exercise_records;
@@ -66,6 +67,18 @@ CREATE TABLE sleep_records (
         ON DELETE CASCADE,
     CONSTRAINT chk_sleep_records_quality
         CHECK (sleep_quality IS NULL OR sleep_quality BETWEEN 1 AND 5)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE ai_diagnosis_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    diagnosis_type VARCHAR(50) NOT NULL, -- 'health' など
+    result TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_ai_diagnosis_logs_user (user_id, created_at),
+    CONSTRAINT fk_ai_diagnosis_logs_user
+        FOREIGN KEY (user_id) REFERENCES users (id)
+        ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE meal_records (

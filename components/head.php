@@ -12,4 +12,5 @@
     <!-- CDN marked.js -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="css/default.css">
+    <script src="js/utils.js"></script>
 </head>

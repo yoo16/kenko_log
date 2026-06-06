@@ -42,7 +42,7 @@ if (empty($_SESSION['user'])) {
                 </div>
             </header>
 
-            <div id="message" class="hidden rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700"></div>
+            <?php include '../components/message.php'; ?>
 
             <section class="grid gap-6">
                 <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
