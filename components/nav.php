@@ -43,7 +43,8 @@ $auth_user = $_SESSION['user'] ?? null;
                 <li>
                     <a href="logout/" class="relative py-1 transition hover:text-sky-600
                     after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0
-                    after:bg-sky-500 after:transition-all hover:after:w-full">
+                    after:bg-sky-500 after:transition-all hover:after:w-full"
+                    onclick="return confirm('ログアウトしますか？');">
                         ログアウト
                     </a>
                 </li>

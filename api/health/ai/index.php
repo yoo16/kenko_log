@@ -23,14 +23,24 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute(['user_id' => $user_id]);
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// 2. AI診断
-$service = new GeminiService();
-$advice = $service->chatHealth($data);
 
-// 3. レスポンス整形
-$output = [
-    'status' => $advice !== null ? 'ok' : 'error',
-    'advice' => $advice ?? '診断の取得に失敗しました。',
-];
+// 2. AI診断
+try {
+    $service = new GeminiService();
+    $advice = $service->chatHealth($data);
+
+    // 3. レスポンス整形
+    $output = [
+        'status' => $advice !== null ? 'ok' : 'error',
+        'advice' => $advice ?? '診断の取得に失敗しました。',
+    ];
+} catch (\Throwable $th) {
+    //throw $th;
+    // 3. レスポンス整形
+    $output = [
+        'status' => $th->getMessage(),
+        'advice' => '診断の取得に失敗しました。',
+    ];
+}
 
 echo json_encode($output, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);

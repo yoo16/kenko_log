@@ -11,7 +11,17 @@ btn.addEventListener('click', async () => {
     try {
         const userId = btn.dataset.userId;
         // API から診断結果を取得
-        const res = await fetch('api/health/ai/');
+        const uri = 'api/health/ai/';
+        console.log(uri)
+        const res = await fetch(uri, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        if (!res.ok) {
+            throw new Error('Network response was not ok');
+        }
         // JSONをJavaScriptオブジェクトに変換
         const json = await res.json();
         console.log(json);
