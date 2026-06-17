@@ -1,7 +1,6 @@
 <?php
 class GeminiService
 {
-    private $baseURL = 'https://generativelanguage.googleapis.com/v1beta/models/';
     private $options = [
         'http' => [
             'method'        => 'POST',
@@ -11,6 +10,17 @@ class GeminiService
         ]
     ];
 
+    private $base_url = "";
+
+    public function __construct()
+    {
+        // Gemini APIキーが設定されていない場合は例外を投げる
+        if (!defined('GEMINI_API_KEY')|| empty(GEMINI_API_KEY)) {
+            return ['status' => 'error', 'message' => 'Gemini APIキーが設定されていません。'];
+        }
+        $this->base_url = GEMINI_API_URL . GEMINI_MODEL . ':generateContent?key=' . GEMINI_API_KEY;
+    }
+
     /**
      * 食品名から栄養成分を推定するメソッド
      * @param  string     $foodName  食品名
@@ -18,13 +28,6 @@ class GeminiService
      */
     public function chatMeal(string $foodName): ?array
     {
-        $url = sprintf(
-            '%s%s:generateContent?key=%s',
-            $this->baseURL,
-            GEMINI_MODEL,
-            GEMINI_API_KEY
-        );
-        // プロンプトを組み立て
         $prompt = implode("\n", [
             '次の食品の1食あたりの標準的な栄養成分を推定',
             '結果は以下のJSON形式のみ',
@@ -40,9 +43,11 @@ class GeminiService
         ];
         // JSONエンコードしてHTTPリクエストのコンテキストを作成
         $this->options['http']['content'] = json_encode($requestData, JSON_UNESCAPED_UNICODE);
+
+        // HTTPコンテキスト作成
         $context  = stream_context_create($this->options);
         // Gemini API呼び出し
-        $response = @file_get_contents($url, false, $context);
+        $response = @file_get_contents($this->base_url, false, $context);
         if ($response === false) {
             return null;
         }
@@ -78,14 +83,8 @@ class GeminiService
      * @param array  $records  health_records から取得した連想配列の配列
      * @return string|null     Gemini の生成テキスト
      */
-    public function chatHealth(array $records): ?string
+    public function chatHealth(array $records)
     {
-        $url = sprintf(
-            '%s%s:generateContent?key=%s',
-            $this->baseURL,
-            GEMINI_MODEL,
-            GEMINI_API_KEY
-        );
         // プロンプトを組み立て
         $lines = ["健康記録、体重(kg)、脈拍(bpm)、血圧(mmHg)の全体傾向と、特に注意すべきポイントを日本語で100文字程度で簡潔にまとめて"];
         foreach ($records as $r) {
@@ -108,17 +107,32 @@ class GeminiService
         ];
         // JSONエンコードしてHTTPリクエストのコンテキストを作成
         $this->options['http']['content'] = json_encode($requestData, JSON_UNESCAPED_UNICODE);
-        $context = stream_context_create($this->options);
 
+        // HTTPコンテキスト作成
+        $context = stream_context_create($this->options);
         // Gemini API呼び出し
-        $response = @file_get_contents($url, false, $context);
+        $response = @file_get_contents($this->base_url, false, $context);
+
         if ($response === false) {
-            return null;
+            return ['status' => 'error', 'message' => 'API接続失敗: ' . ($http_response_header[0] ?? '不明なエラー')];
         }
 
-        // JSONをデコード
         $json = json_decode($response, true);
-        // テキストデータを返す
-        return $json['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
+        // API側が返すエラーメッセージを取得
+        if (isset($json['error'])) {
+            return ['status' => 'error', 'message' => 'Gemini APIエラー: ' . $json['error']['message']];
+        }
+
+        // 生成されたテキストを取得
+        $advice = $json['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
+        // テキストが取得できなかった場合のエラーハンドリング
+        if (!$advice) {
+            return ['status' => 'error', 'message' => '回答の取得に失敗しました。'];
+        }
+
+        // 結果を返す
+        return ['status' => 'ok', 'advice' => $advice];
     }
 }

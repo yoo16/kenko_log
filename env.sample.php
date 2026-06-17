@@ -8,6 +8,9 @@ const DB_PASS = '';
 const DB_PORT = '3306';
 const DB_CHARSET = 'utf8mb4';
 
-// Google Gemini APIキー
-const GEMINI_API_KEY = 'API KEYをここに入力';
+// Gemini API の URL
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/';
+// Gemini APIキーをここに入力してください
+const GEMINI_API_KEY = '';
+// Geminiモデルの指定
 const GEMINI_MODEL = 'gemini-2.5-flash-lite';
