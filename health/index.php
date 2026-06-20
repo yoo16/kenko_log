@@ -115,16 +115,8 @@ function get(int $userId, int $limit = 30)
 
     <?php include '../components/footer.php'; ?>
 
-    <!-- AI ローディングモーダル -->
-    <div id="ai-loading-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm">
-        <div class="flex flex-col items-center gap-5 rounded-2xl bg-white px-14 py-10 shadow-2xl">
-            <div class="h-12 w-12 animate-spin rounded-full border-4 border-sky-200 border-t-sky-600"></div>
-            <div class="text-center">
-                <p class="text-sm font-bold text-slate-700">AI 診断中</p>
-                <p class="mt-1 text-xs text-slate-400">少々お待ちください…</p>
-            </div>
-        </div>
-    </div>
+    <!-- ローディングモーダル -->
+    <?php include '../components/loading_modal.php'; ?>
 
     <!-- JS -->
     <script src="js/health_ai.js" defer></script>

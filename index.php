@@ -1,12 +1,5 @@
 <?php
 require_once 'app.php';
-// use Lib\Database;
-// try {
-//     Database::getInstance();
-// } catch (Throwable $e) {
-//     header('Location: create_database.php');
-//     exit;
-// }
 ?>
 <!DOCTYPE html>
 <html lang="ja">
