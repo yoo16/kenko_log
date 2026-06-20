@@ -5,23 +5,12 @@ require_once '../../../app.php';
 use Lib\Database;
 
 // ログインチェック
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 // データベース接続
 $pdo = Database::getInstance();
 // TODO: SQLクエリを作成 
-// 1. 選択カラム: recorded_at, weight, heart_rate, systolic, diastolic
-// 2. recorded_atの降順
-// 3. ユーザーIDで絞り込み
-// 4. 30件に制限
-$sql = "SELECT recorded_at, weight, heart_rate, systolic, diastolic 
-        FROM health_records 
-        WHERE user_id = :user_id
-        ORDER BY recorded_at DESC 
-        LIMIT 30";
+$sql = "";
 
 // プリペアドステートメントを作成して実行
 $stmt = $pdo->prepare($sql);
@@ -38,7 +27,9 @@ $csv_file = 'health_records_latest.csv';
 header("Content-Type: text/csv; charset=utf-8");
 header("Content-Disposition: attachment; filename={$csv_file}");
 
+// BOMを出力してExcelで文字化けしないようにする
 fwrite($output, "\xEF\xBB\xBF");
+// CSVのヘッダー行
 fputcsv($output, ['recorded_at', 'weight', 'heart_rate', 'systolic', 'diastolic'], ',', '"', '\\');
 // CSVのデータ行
 foreach ($rows as $row) {

@@ -1,9 +1,11 @@
 const MEAL_TYPE_LABEL = {
     breakfast: '朝食',
-    lunch:     '昼食',
-    dinner:    '夕食',
-    snack:     '間食',
+    lunch: '昼食',
+    dinner: '夕食',
+    snack: '間食',
 };
+
+const url = 'api/dashboard/';
 
 function formatMinutes(minutes) {
     if (!minutes) return '0h 00m';
@@ -18,18 +20,18 @@ function el(id) {
 
 function renderStats(data) {
     const h = data.latest_health;
-    el('stat-weight').innerHTML       = h ? `${h.weight}<span class="text-base text-slate-400"> kg</span>` : '-';
+    el('stat-weight').innerHTML = h ? `${h.weight}<span class="text-base text-slate-400"> kg</span>` : '-';
     el('stat-weight-date').textContent = h ? h.recorded_at : '記録なし';
-    el('stat-heart').innerHTML        = h ? `${h.heart_rate}<span class="text-base text-slate-400"> bpm</span>` : '-';
-    el('stat-bp').textContent         = h ? `血圧 ${h.systolic ?? '-'}/${h.diastolic ?? '-'}` : '血圧 -';
+    el('stat-heart').innerHTML = h ? `${h.heart_rate}<span class="text-base text-slate-400"> bpm</span>` : '-';
+    el('stat-bp').textContent = h ? `血圧 ${h.systolic ?? '-'}/${h.diastolic ?? '-'}` : '血圧 -';
 
     const ex = data.exercise_summary;
-    el('stat-exercise').innerHTML     = `${ex?.total_minutes ?? 0}<span class="text-base text-slate-400"> min</span>`;
+    el('stat-exercise').innerHTML = `${ex?.total_minutes ?? 0}<span class="text-base text-slate-400"> min</span>`;
     el('stat-exercise-sub').textContent = `${ex?.record_count ?? 0}件 / ${ex?.total_calories ?? 0} kcal`;
 
     const s = data.latest_sleep;
-    el('stat-sleep').textContent      = s ? formatMinutes(parseInt(s.sleep_duration_minutes)) : '-';
-    el('stat-sleep-sub').textContent  = `睡眠品質 ${s?.sleep_quality ?? '-'} / 5`;
+    el('stat-sleep').textContent = s ? formatMinutes(parseInt(s.sleep_duration_minutes)) : '-';
+    el('stat-sleep-sub').textContent = `睡眠品質 ${s?.sleep_quality ?? '-'} / 5`;
 
     el('dashboard-title').textContent = `${data.user.name}さんの健康ダッシュボード`;
 }
@@ -94,7 +96,6 @@ function escHtml(str) {
 async function loadDashboard() {
     showSkeleton(true);
     try {
-        const url = 'api/dashboard/';
         // APIからデータを取得
         const res = await fetch(url);
         if (!res.ok) {

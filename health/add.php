@@ -4,19 +4,16 @@ require_once '../app.php';
 
 use Lib\Database;
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 // 最新の記録を初期値として取得
 $pdo  = Database::getInstance();
 $stmt = $pdo->prepare(
     'SELECT weight, heart_rate, systolic, diastolic
-     FROM health_records
-     WHERE user_id = :user_id
-     ORDER BY recorded_at DESC
-     LIMIT 1'
+    FROM health_records
+    WHERE user_id = :user_id
+    ORDER BY recorded_at DESC
+    LIMIT 1'
 );
 $stmt->execute([':user_id' => (int) $_SESSION['user']['id']]);
 $latest = $stmt->fetch(PDO::FETCH_ASSOC);

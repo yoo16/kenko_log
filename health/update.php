@@ -8,10 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 // POSTデータの取得
 $posts = $_POST;
@@ -62,14 +59,14 @@ function hasDuplicate(int $userId, $id, $recorded_at)
 {
     // データベース接続
     $pdo = Database::getInstance();
-    // TODO: reported_at が重複しているか確認 ただし、現在のレコードは除外する
+    // reported_at が重複しているか確認 ただし、現在のレコードは除外する
     $sql = "SELECT id 
         FROM health_records 
         WHERE user_id = :user_id AND recorded_at = :recorded_at AND id != :id";
     // プリペアドステートメントを作成
     $stmt = $pdo->prepare($sql);
 
-    // TODO: SQLを実行
+    // SQLを実行
     $stmt->execute([
         ':user_id' => $userId,
         ':recorded_at' => $recorded_at,

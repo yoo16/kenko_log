@@ -3,10 +3,7 @@ require_once '../app.php';
 
 use Lib\Database;
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 // 一覧データを取得
 $records = get((int) $_SESSION['user']['id']);
@@ -23,9 +20,7 @@ function get(int $userId, int $limit = 30)
     // プリペアドステートメントを作成
     $stmt = $pdo->prepare($sql);
     // SQLを実行
-    $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->execute();
+    $stmt->execute(['user_id' => $userId, 'limit' => $limit]);
     // 結果を取得
     $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $records;
@@ -46,9 +41,6 @@ function get(int $userId, int $limit = 30)
                 <div>
                     <p class="text-sm font-semibold text-sky-600">Health Records</p>
                     <h1 class="mt-2 text-3xl font-bold text-slate-900">健康管理</h1>
-                    <p class="mt-3 text-sm leading-7 text-slate-500">
-                        体重、心拍数、血圧の変化を日付ごとに確認できます。
-                    </p>
                 </div>
 
                 <!-- メニュー -->
@@ -62,19 +54,21 @@ function get(int $userId, int $limit = 30)
                     <a href="health/chart.php" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
                         グラフ
                     </a>
-                    <a href="api/health/csv/" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
-                        CSVダウンロード
-                    </a>
-                    <a id="ai-chat-btn" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
-                        AI分析
-                    </a>
                     <a href="health/ai_history.php" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
                         AI履歴
                     </a>
+                    <a href="api/health/csv/" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
+                        CSVダウンロード
+                    </a>
                 </div>
             </header>
-    
+
             <!-- メッセージ表示 -->
+            <div class="flex items-center justify-center">
+                <a id="ai-chat-btn" class="text-center rounded-lg border bg-emerald-500 px-5 py-3 text-sm font-bold text-white transition">
+                    AI分析（最新の30件を分析）
+                </a>
+            </div>
             <?php include '../components/message.php'; ?>
             <!-- AI結果表示 -->
             <div id="ai-result" class="hidden rounded-xl border border-sky-100 bg-white p-6 text-sm leading-7 text-slate-700 shadow-sm shadow-sky-100/70">
@@ -99,9 +93,9 @@ function get(int $userId, int $limit = 30)
                                     <td class="px-5 py-4">
                                         <a href="health/edit.php?id=<?= $row['id'] ?>" class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 transition hover:bg-sky-50">Edit</a>
                                     </td>
-                                    <td class="px-5 py-4 font-medium" nowrap="nowrap"><?= htmlspecialchars($row['recorded_at']) ?></td>
+                                    <td class="px-5 py-4 font-medium" nowrap="nowrap"><?= htmlspecialchars(date('Y/m/d', strtotime($row['recorded_at']))) ?></td>
                                     <td class="px-5 py-4"><?= htmlspecialchars($row['weight']) ?></td>
-                                    <td class="px-5 py-4"><?= htmlspecialchars($row['heart_rate']) ?></td>
+                                    <td class="px-5 py-4">TODO: 心拍数を表示</td>
                                     <td class="px-5 py-4"><?= htmlspecialchars($row['systolic']) ?></td>
                                     <td class="px-5 py-4"><?= htmlspecialchars($row['diastolic']) ?></td>
                                 </tr>
@@ -115,7 +109,7 @@ function get(int $userId, int $limit = 30)
 
     <?php include '../components/footer.php'; ?>
 
-    <!-- ローディングモーダル -->
+    <!-- AI ローディングモーダル -->
     <?php include '../components/loading_modal.php'; ?>
 
     <!-- JS -->

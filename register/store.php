@@ -2,43 +2,42 @@
 require_once '../app.php';
 
 use Lib\Database;
+use Lib\App;
 
+// POSTリクエスト以外は受け付けない
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ./');
     exit;
 }
 
-$posts = [
-    'name' => trim($_POST['name'] ?? ''),
-    'email' => trim($_POST['email'] ?? ''),
-    'password' => $_POST['password'] ?? '',
-    'password_confirmation' => $_POST['password_confirmation'] ?? '',
-    'csrf_token' => $_POST['csrf_token'] ?? '',
-];
+// POSTデータのサニタイズ
+$posts = App::sanitize($_POST);
 
-$_SESSION['register_old'] = [
-    'name' => $posts['name'],
-    'email' => $posts['email'],
-];
+// 古い入力データをセッションに保存
+$_SESSION['register_old']['name'] = $posts['name'] ?? '';
+$_SESSION['register_old']['email'] = $posts['email'] ?? '';
 
+// バリデーション
 $errors = validateRegisterInput($posts);
 
-if (!$errors && emailExists($posts['email'])) {
+if (!$errors && findUserByEmail($posts['email'])) {
     $errors[] = 'このメールアドレスはすでに登録されています。';
 }
 
+// エラーがある場合はセッションに保存してリダイレクト
 if ($errors) {
     $_SESSION['register_errors'] = $errors;
-    header('Location: ./');
+    header('Location: ./input.php');
     exit;
 }
 
+// ユーザーを作成
 createUser($posts);
 
 unset($_SESSION['register_old']);
 $_SESSION['register_message'] = 'ユーザー登録が完了しました。';
 
-header('Location: ./');
+// ログインページにリダイレクト
+header('Location: ../login');
 exit;
 
 function validateRegisterInput(array $posts): array
@@ -68,25 +67,37 @@ function validateRegisterInput(array $posts): array
     return $errors;
 }
 
-function emailExists(string $email): bool
+function findUserByEmail(string $email): ?array
 {
+    // データベース接続
     $pdo = Database::getInstance();
-    $sql = 'SELECT id FROM users WHERE email = :email LIMIT 1';
+    // SQL文
+    $sql = "SELECT * FROM users 
+            WHERE email = :email 
+            LIMIT 1";
+    // プリペアドステートメント
     $stmt = $pdo->prepare($sql);
+    // SQLの実行
     $stmt->execute([':email' => $email]);
-
-    return (bool) $stmt->fetch(PDO::FETCH_ASSOC);
+    // ユーザを取得
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $user ?: null;
 }
 
 function createUser(array $posts): void
 {
-    $pdo = Database::getInstance();
-    $sql = 'INSERT INTO users (name, email, password_hash) VALUES (:name, :email, :password_hash)';
-    $stmt = $pdo->prepare($sql);
+    // TODO: パスワードをハッシュ化して保存する
+    $posts['password_hash'] = "";
 
+    $pdo = Database::getInstance();
+    $sql = 'INSERT INTO users (name, email, password_hash) 
+                VALUES (:name, :email, :password_hash)';
+    // プリペアドステートメント
+    $stmt = $pdo->prepare($sql);
+    // SQLの実行
     $stmt->execute([
         ':name' => $posts['name'],
         ':email' => $posts['email'],
-        ':password_hash' => password_hash($posts['password'], PASSWORD_DEFAULT),
+        ':password_hash' => $posts['password_hash'],
     ]);
 }

@@ -3,10 +3,7 @@ require_once '../../../../app.php';
 
 use Lib\Database;
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 $pdo  = Database::getInstance();
 $stmt = $pdo->prepare(

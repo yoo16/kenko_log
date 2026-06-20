@@ -1,17 +1,18 @@
 <?php
 require_once '../app.php';
 
-// エラーメッセージをセッションから取得
-$errors = $_SESSION['login_errors'] ?? [];
-// 成功メッセージをセッションから取得
-$message = $_SESSION['login_message'] ?? '';
-// TODO: 古い入力値を取得（なければ空の配列）
-$old = [ 'email' => '' ];
+// 古い入力データの取得
+$old = $_SESSION['register_old'] ?? [
+    'name' => '',
+    'email' => '',
+];
+// エラーとフラッシュメッセージの取得
+$errors = $_SESSION['register_errors'] ?? [];
+$message = $_SESSION['register_message'] ?? '';
+// フラッシュメッセージのクリア
+unset($_SESSION['register_errors'], $_SESSION['register_message']);
 
-// セッションのエラーメッセージ、成功メッセージ、古い入力値をクリア
-unset($_SESSION['login_errors'], $_SESSION['login_message'], $_SESSION['login_old']);
-
-// CSRFトークンを生成してセッションに保存（なければ）
+// CSRFトークンの生成
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
@@ -27,27 +28,28 @@ if (empty($_SESSION['csrf_token'])) {
 
     <main class="min-h-[calc(100vh-160px)] px-6 py-14">
         <section class="mx-auto grid max-w-5xl overflow-hidden rounded-2xl border border-sky-100 bg-white shadow-xl shadow-sky-100/70 md:grid-cols-[0.95fr_1.05fr]">
-            <div class="bg-gradient-to-br from-sky-700 to-blue-500 p-8 text-white md:p-10">
+            <div class="bg-gradient-to-br from-sky-600 to-cyan-500 p-8 text-white md:p-10">
                 <div class="flex h-full flex-col justify-between gap-10">
                     <div>
                         <p class="mb-4 text-sm font-semibold text-sky-100">KENKO LOG</p>
                         <h1 class="text-3xl font-bold leading-tight md:text-4xl">
-                            今日の記録を、続きから。
+                            健康記録を、今日から始める。
                         </h1>
                         <p class="mt-5 text-sm leading-7 text-sky-50">
-                            ログインすると、健康・運動・睡眠・食事の記録をまとめて確認できます。
+                            ユーザー登録をすると、健康・運動・睡眠・食事の記録をひとつのアカウントで管理できます。
                         </p>
                     </div>
 
                     <div class="rounded-xl bg-white/15 p-5 text-sm leading-7 backdrop-blur">
-                        毎日の記録を積み重ねて、自分の体調リズムを見つけましょう。
+                        日々の小さな変化を残しておくことで、体調の傾向をあとから振り返りやすくなります。
                     </div>
                 </div>
             </div>
 
             <div class="p-8 md:p-10">
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-slate-900">ログイン</h2>
+                    <h2 class="text-2xl font-bold text-slate-900">ユーザー登録</h2>
+                    <p class="mt-2 text-sm text-slate-500">登録情報を入力してください。</p>
                 </div>
 
                 <?php if ($message): ?>
@@ -66,8 +68,16 @@ if (empty($_SESSION['csrf_token'])) {
                     </div>
                 <?php endif; ?>
 
-                <form action="login/auth.php" method="post" class="space-y-5">
-                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+                <form action="register/store.php" method="post" class="space-y-5">
+                    <!-- TODO: CSRFトークン送信 -->
+                    <input type="hidden" name="csrf_token" value="">
+
+                    <div>
+                        <label for="name" class="mb-2 block text-sm font-semibold text-slate-700">名前</label>
+                        <input id="name" type="text" name="name" required
+                            value="<?= htmlspecialchars($old['name']) ?>"
+                            class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100">
+                    </div>
 
                     <div>
                         <label for="email" class="mb-2 block text-sm font-semibold text-slate-700">メールアドレス</label>
@@ -82,16 +92,18 @@ if (empty($_SESSION['csrf_token'])) {
                             class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100">
                     </div>
 
-                    <div class="mt-2 text-sm text-slate-500">
-                        <a id="auto-input-user" class="px-4 py-2 text-sky-600 border border-sky-200 rounded-xl">テストユーザーを入力</a>
+                    <div>
+                        <label for="password_confirmation" class="mb-2 block text-sm font-semibold text-slate-700">パスワード確認</label>
+                        <input id="password_confirmation" type="password" name="password_confirmation" required
+                            class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100">
                     </div>
 
                     <div class="flex flex-col gap-3 pt-3 sm:flex-row">
                         <button type="submit" class="w-full rounded-lg kenko-gradient px-6 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
-                            ログイン
+                            登録する
                         </button>
-                        <a href="register/" class="w-full rounded-lg border border-sky-200 bg-white px-6 py-3 text-center text-sm font-bold text-sky-700 transition hover:bg-sky-50">
-                            新規登録
+                        <a href="" class="w-full rounded-lg border border-sky-200 bg-white px-6 py-3 text-center text-sm font-bold text-sky-700 transition hover:bg-sky-50">
+                            キャンセル
                         </a>
                     </div>
                 </form>
@@ -100,8 +112,6 @@ if (empty($_SESSION['csrf_token'])) {
     </main>
 
     <?php include '../components/footer.php'; ?>
-
-    <script src="js/test_user.js"></script>
 </body>
 
 </html>

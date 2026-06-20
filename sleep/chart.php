@@ -1,10 +1,7 @@
 <?php
 require_once '../app.php';
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 ?>
 
 <!DOCTYPE html>
@@ -35,6 +32,9 @@ if (empty($_SESSION['user'])) {
                     </a>
                     <a href="sleep/chart.php" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
                         グラフ
+                    </a>
+                    <a href="health/ai_history.php" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
+                        AI履歴
                     </a>
                     <button onclick="downloadChart()" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-5 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
                         グラフダウンロード

@@ -3,10 +3,7 @@ require_once '../app.php';
 
 use Lib\Database;
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ' . BASE_URL . 'sleep/');
@@ -17,11 +14,9 @@ $id = (int) ($_POST['id'] ?? 0);
 
 if ($id > 0) {
     $pdo = Database::getInstance();
-    $stmt = $pdo->prepare('DELETE FROM sleep_records WHERE id = :id AND user_id = :user_id');
-    $stmt->execute([
-        ':id'      => $id,
-        ':user_id' => (int) $_SESSION['user']['id'],
-    ]);
+    $sql = 'DELETE FROM sleep_records WHERE id = :id AND user_id = :user_id';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([]);
 }
 
 header('Location: ' . BASE_URL . 'sleep/');

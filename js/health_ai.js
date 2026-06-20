@@ -29,6 +29,7 @@ btn.addEventListener('click', async () => {
         }
         // JSONをパース
         const json = await response.json();
+        console.log(json);
 
         if (json.status === 'ok') {
             box.innerHTML = marked.parse(json.advice);
@@ -37,7 +38,7 @@ btn.addEventListener('click', async () => {
             showMessage(json.message ?? '診断の取得に失敗しました。');
         }
     } catch (e) {
-        showMessage('通信エラーが発生しました。', true);
+        showMessage('APIエラーが発生しました。', true);
     } finally {
         hideModal();
         btn.disabled = false;

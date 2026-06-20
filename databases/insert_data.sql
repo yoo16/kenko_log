@@ -1,3 +1,5 @@
+-- email: test@example.com
+-- password: testpassword
 INSERT INTO users (id, name, email, password_hash) VALUES
 (1, 'テストユーザー', 'test@example.com', '$2y$12$Ydn4/qmh.2vJ6kMxJMXR5eGkrC/CRGeUTy.qcP7wKMpu9Vf5Q3eja');
 

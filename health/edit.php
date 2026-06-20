@@ -4,13 +4,10 @@ require_once '../app.php';
 
 use Lib\Database;
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 // TODO: GETリクエストから id を取得
-$id = $_GET['id'] ?? null;
+$id = null;
 
 // id を渡してレコードを取得
 $record = find($id, (int) $_SESSION['user']['id']);

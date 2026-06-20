@@ -7,11 +7,12 @@ Chart.register(window['chartjs-plugin-annotation']);
 renderCharts();
 
 async function fetchActivityData() {
-    const url = 'api/activity/get/';
+    // TODO: APIのURLを指定
+    const url = '';
     // APIからデータを取得
     const res = await fetch(url);
     if (!res || !res.ok) {
-        showMessage(`API通信エラー: api/activity/get/`);
+        showMessage(`API通信エラー`);
         return;
     }
     try {

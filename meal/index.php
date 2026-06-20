@@ -3,10 +3,7 @@ require_once '../app.php';
 
 use Lib\Database;
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 $records = getMealRecords((int) $_SESSION['user']['id']);
 
@@ -85,7 +82,7 @@ function mealTypeLabel(string $mealType): string
                                         <a href="meal/edit.php?id=<?= $row['id'] ?>" class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 transition hover:bg-sky-50">Edit</a>
                                     </td>
                                     <td class="px-5 py-4 font-medium" nowrap="nowrap"><?= htmlspecialchars($row['meal_date']) ?></td>
-                                    <td class="px-5 py-4"><?= htmlspecialchars(mealTypeLabel($row['meal_type'])) ?></td>
+                                    <td class="px-5 py-4">TODO: 食事の種別を表示</td>
                                     <td class="px-5 py-4"><?= htmlspecialchars($row['food_name']) ?></td>
                                     <td class="px-5 py-4"><?= $row['calories'] !== null ? (int) $row['calories'] . ' kcal' : '-' ?></td>
                                     <td class="px-5 py-4 text-slate-500">

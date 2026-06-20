@@ -12,13 +12,22 @@ class GeminiService
 
     private $base_url = "";
 
-    public function __construct()
+    private function checkApiUrl(): bool
     {
-        // Gemini APIキーが設定されていない場合は例外を投げる
-        if (!defined('GEMINI_API_KEY')|| empty(GEMINI_API_KEY)) {
-            return ['status' => 'error', 'message' => 'Gemini APIキーが設定されていません。'];
+        if (defined('GEMINI_API_URL') && defined('GEMINI_API_KEY') && defined('GEMINI_MODEL')) {
+            if (!empty(GEMINI_API_URL) && !empty(GEMINI_API_KEY) && !empty(GEMINI_MODEL)) {
+                $this->base_url = GEMINI_API_URL . GEMINI_MODEL . ':generateContent?key=' . GEMINI_API_KEY;
+                return true;
+            }
         }
-        $this->base_url = GEMINI_API_URL . GEMINI_MODEL . ':generateContent?key=' . GEMINI_API_KEY;
+        return false;
+    }
+
+    private function checkApi(): array {
+        if (!$this->checkApiUrl()) {
+            return ['status' => 'error', 'message' => 'Gemini API 設定がされていません。'];
+        }
+        return [];
     }
 
     /**
@@ -28,6 +37,9 @@ class GeminiService
      */
     public function chatMeal(string $foodName): ?array
     {
+        // API設定の確認
+        if ($errors = $this->checkApi()) return $errors;
+
         $prompt = implode("\n", [
             '次の食品の1食あたりの標準的な栄養成分を推定',
             '結果は以下のJSON形式のみ',
@@ -53,6 +65,7 @@ class GeminiService
         }
         // JSONをデコードしてテキストを抽出
         $json = json_decode($response, true);
+        // API側が返すメッセージを取得
         $text = $json['candidates'][0]['content']['parts'][0]['text'] ?? null;
         if ($text === null) {
             return null;
@@ -81,10 +94,13 @@ class GeminiService
     /**
      * 単一プロンプトでまとめて診断するメソッド
      * @param array  $records  health_records から取得した連想配列の配列
-     * @return string|null     Gemini の生成テキスト
+     * @return array
      */
-    public function chatHealth(array $records)
+    public function chatHealth(array $records): array
     {
+        // API設定の確認
+        if ($errors = $this->checkApi()) return $errors;
+
         // プロンプトを組み立て
         $lines = ["健康記録、体重(kg)、脈拍(bpm)、血圧(mmHg)の全体傾向と、特に注意すべきポイントを日本語で100文字程度で簡潔にまとめて"];
         foreach ($records as $r) {

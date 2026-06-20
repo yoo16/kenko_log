@@ -1,10 +1,7 @@
 <?php
 require_once '../app.php';
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 $record = [
     'exercise_date' => date('Y-m-d'),
@@ -50,7 +47,7 @@ if (isset($_SESSION['activity_message'])) {
                 </div>
             <?php endif; ?>
 
-            <form action="activity/insert.php" method="post" class="space-y-6">
+            <form action="activity/insert.php" method="" class="space-y-6">
                 <div>
                     <label class="mb-2 block text-sm font-semibold text-slate-700">運動日</label>
                     <input type="date" name="exercise_date" required value="<?= htmlspecialchars($record['exercise_date']) ?>"
@@ -60,7 +57,7 @@ if (isset($_SESSION['activity_message'])) {
                 <div class="grid gap-5 md:grid-cols-2">
                     <div>
                         <label class="mb-2 block text-sm font-semibold text-slate-700">運動の種類</label>
-                        <input type="text" name="exercise_type" required value="<?= htmlspecialchars($record['exercise_type']) ?>" placeholder="例: ウォーキング"
+                        <input type="text" name="exercise_type" required value="ウォーキング" placeholder="例: ウォーキング"
                             class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100">
                     </div>
                     <div>

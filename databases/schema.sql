@@ -1,5 +1,5 @@
-DROP DATABASE IF EXISTS health_tracker;
-CREATE DATABASE health_tracker CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+DROP DATABASE IF EXISTS health_log;
+CREATE DATABASE health_log CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 SET FOREIGN_KEY_CHECKS = 0;
 

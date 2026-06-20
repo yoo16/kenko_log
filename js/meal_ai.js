@@ -1,16 +1,21 @@
+const modal = document.getElementById('ai-loading-modal');
 const aiBtn = document.getElementById('meal-ai-btn');
 const foodNameInput = document.getElementById('food_name');
 const aiMessage = document.getElementById('meal-ai-message');
-const aiModal = document.getElementById('ai-loading-modal');
 
 const calories = document.getElementById('calories');
 const protein_g = document.getElementById('protein_g');
 const fat_g = document.getElementById('fat_g');
 const carbohydrate_g = document.getElementById('carbohydrate_g');
 
-function setLoading(loading) {
-    aiBtn.disabled = loading;
-    aiModal.classList.toggle('hidden', !loading);
+function showModal() {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function hideModal() {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
 }
 
 function showMessage(text, isError = false) {
@@ -28,7 +33,7 @@ aiBtn.addEventListener('click', async () => {
         return;
     }
 
-    setLoading(true);
+    showModal();
     showMessage('');
 
     try {
@@ -60,6 +65,6 @@ aiBtn.addEventListener('click', async () => {
     } catch {
         showMessage('通信エラーが発生しました。', true);
     } finally {
-        setLoading(false);
+        hideModal();
     }
 });

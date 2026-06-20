@@ -13,7 +13,7 @@ renderCharts();
 
 // データ取得関数（共通）
 async function fetchHealthData() {
-    // TODO: APIのURLを指定
+    // APIのURLを指定
     const url = 'api/health/get/';
     // APIにGETリクエスト
     const response = await fetch(url);

@@ -3,10 +3,7 @@ require_once '../app.php';
 
 use Lib\Database;
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 $records = getActivityRecords((int) $_SESSION['user']['id']);
 
@@ -83,7 +80,7 @@ function getActivityRecords(int $userId, int $limit = 30): array
                                         </div>
                                     </td>
                                     <td class="px-5 py-4 font-medium" nowrap="nowrap"><?= htmlspecialchars($row['exercise_date']) ?></td>
-                                    <td class="px-5 py-4"><?= htmlspecialchars($row['exercise_type']) ?></td>
+                                    <td class="px-5 py-4"><?= htmlspecialchars($row['']) ?></td>
                                     <td class="px-5 py-4"><?= (int) $row['duration_minutes'] ?>分</td>
                                     <td class="px-5 py-4"><?= $row['calories_burned'] !== null ? (int) $row['calories_burned'] . ' kcal' : '-' ?></td>
                                     <td class="px-5 py-4"><?= $row['distance_km'] !== null ? htmlspecialchars($row['distance_km']) . ' km' : '-' ?></td>

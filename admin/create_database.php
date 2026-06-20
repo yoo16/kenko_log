@@ -16,6 +16,20 @@ const INSERT_FILE = __DIR__ . "/../databases/insert_data.sql";
 $schema_sql = file_exists(SCHEMA_FILE) ? file_get_contents(SCHEMA_FILE) : "-- Schema file not found";
 $insert_sql = file_exists(INSERT_FILE) ? file_get_contents(INSERT_FILE) : "-- Insert data file not found";
 
+function quoteIdentifier(string $identifier): string
+{
+    return '`' . str_replace('`', '``', $identifier) . '`';
+}
+
+function schemaSqlForSelectedDatabase(string $sql): string
+{
+    $sql = preg_replace('/^\s*DROP\s+DATABASE\s+IF\s+EXISTS\s+`?[\w-]+`?\s*;\s*/im', '', $sql);
+    $sql = preg_replace('/^\s*CREATE\s+DATABASE\s+`?[\w-]+`?.*?;\s*/im', '', $sql);
+    $sql = preg_replace('/^\s*USE\s+`?[\w-]+`?\s*;\s*/im', '', $sql);
+
+    return $sql;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // CSRFトークンの検証
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
@@ -28,16 +42,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
+        $databaseName = quoteIdentifier(DB_NAME);
+
         // 1. データベース作成
-        $sql = "CREATE DATABASE IF NOT EXISTS " . DB_NAME;
+        $sql = "CREATE DATABASE IF NOT EXISTS {$databaseName} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci";
         $pdo->exec($sql);
 
         // 2. データベース選択
-        $sql = "USE " . DB_NAME;
+        $sql = "USE {$databaseName}";
         $pdo->exec($sql);
 
         // 3. スキーマ作成
-        $pdo->exec($schema_sql);
+        $pdo->exec(schemaSqlForSelectedDatabase($schema_sql));
         $message .= "✅ データベーススキーマを作成しました。" . PHP_EOL;
 
         // 4. 初期データ挿入

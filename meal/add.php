@@ -1,10 +1,7 @@
 <?php
 require_once '../app.php';
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 $record = [
     'meal_date' => date('Y-m-d'),

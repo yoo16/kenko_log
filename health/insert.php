@@ -8,10 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 // POSTデータの取得
 $posts = $_POST;
@@ -35,8 +32,8 @@ function insert(int $userId, array $posts)
 {
     // データベース接続
     $pdo = Database::getInstance();
-    // SQLクエリ
-    $sql = "INSERT INTO health_records (user_id, weight, heart_rate, systolic, diastolic, recorded_at) 
+    // TODO: SQLクエリ
+    $sql = "INSERT INTO xxxx (user_id, weight, heart_rate, systolic, diastolic, recorded_at) 
             VALUES (:user_id, :weight, :heart_rate, :systolic, :diastolic, :recorded_at)";
     // プリペアドステートメントを作成
     $stmt = $pdo->prepare($sql);

@@ -10,7 +10,7 @@ const DB_CHARSET = 'utf8mb4';
 
 // Gemini API の URL
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/';
-// Gemini APIキーをここに入力してください
+// Gemini APIキーをここに入力してください ※このキーは外部に漏らしたり、レポートに書かないでください！
 const GEMINI_API_KEY = '';
 // Geminiモデルの指定
 const GEMINI_MODEL = 'gemini-2.5-flash-lite';

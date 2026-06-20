@@ -1,6 +1,8 @@
 <?php
 // 共通処理を読み込む
 require_once '../app.php';
+
+\Lib\App::authUser();
 ?>
 
 <!DOCTYPE html>
@@ -17,9 +19,6 @@ require_once '../app.php';
                 <div>
                     <p class="text-sm font-semibold text-sky-600">Health Charts</p>
                     <h1 class="mt-2 text-3xl font-bold text-slate-900">健康グラフ</h1>
-                    <p class="mt-3 text-sm leading-7 text-slate-500">
-                        体重、心拍数、血圧の推移をグラフで確認できます。
-                    </p>
                 </div>
 
                 <!-- メニュー -->
@@ -36,7 +35,7 @@ require_once '../app.php';
                     <a href="health/ai_history.php" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
                         AI履歴
                     </a>
-                    <button onclick="downloadChart()" class="inline-flex items-center justify-center rounded-lg kenko-gradient px-5 py-3 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:opacity-90">
+                    <button onclick="downloadChart()" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
                         グラフダウンロード
                     </button>
                 </div>

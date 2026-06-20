@@ -3,12 +3,10 @@ require_once '../app.php';
 
 use Lib\Database;
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $_SESSION['activity_message'] = '不正なリクエストです。';
     header('Location: ' . BASE_URL . 'activity/add.php');
     exit;
 }

@@ -3,18 +3,15 @@ require_once '../app.php';
 
 use Lib\Database;
 
-if (empty($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . 'login/');
-    exit;
-}
+\Lib\App::authUser();
 
 $pdo  = Database::getInstance();
 $stmt = $pdo->prepare(
     'SELECT id, diagnosis_type, result, created_at
-     FROM ai_diagnosis_logs
-     WHERE user_id = :user_id
-     ORDER BY created_at DESC
-     LIMIT 50'
+        FROM ai_diagnosis_logs
+        WHERE user_id = :user_id
+        ORDER BY created_at DESC
+        LIMIT 50'
 );
 $stmt->execute([':user_id' => (int) $_SESSION['user']['id']]);
 $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -34,9 +31,6 @@ $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div>
                     <p class="text-sm font-semibold text-sky-600">AI Diagnosis History</p>
                     <h1 class="mt-2 text-3xl font-bold text-slate-900">AI診断履歴</h1>
-                    <p class="mt-3 text-sm leading-7 text-slate-500">
-                        過去の AI 診断結果を確認できます。最新50件を表示。
-                    </p>
                 </div>
 
                 <div class="flex flex-col gap-3 sm:flex-row">
@@ -49,7 +43,7 @@ $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <a href="health/chart.php" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
                         グラフ
                     </a>
-                    <a href="health/ai_history.php" class="inline-flex items-center justify-center rounded-lg border border-sky-300 bg-sky-50 px-5 py-3 text-sm font-bold text-sky-700 transition hover:bg-sky-100">
+                    <a href="health/ai_history.php" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">
                         AI履歴
                     </a>
                     <a href="api/health/ai/csv/" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:border-sky-200 hover:text-sky-700">

@@ -9,8 +9,8 @@ class App
     public static function boot(): void
     {
         self::defineBaseUrl();
+        self::defineBaseDir();
         self::startSession();
-        self::redirectToSetupIfDatabaseUnavailable();
     }
 
     public static function baseUrl(): string
@@ -18,22 +18,26 @@ class App
         return BASE_URL;
     }
 
+    public static function baseDir(): string
+    {
+        return BASE_DIR;
+    }
+
+    public static function sanitize(array | string $posts)
+    {
+        if (is_array($posts)) {
+            return array_map([self::class, 'sanitize'], $posts);
+        }
+        return htmlspecialchars(trim((string) $posts), ENT_QUOTES, 'UTF-8');
+    }
+
+
     private static function startSession(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
             session_regenerate_id(true);
         }
-    }
-
-    private static function redirectToSetupIfDatabaseUnavailable(): void
-    {
-        if (self::isDatabaseSetupPage() || self::checkDatabaseConnection()) {
-            return;
-        }
-
-        header('Location: ' . self::baseUrl() . 'create_database.php');
-        exit;
     }
 
     private static function checkDatabaseConnection(): bool
@@ -91,4 +95,24 @@ class App
         define('BASE_URL', $baseUrl);
     }
 
+    private static function defineBaseDir(): void
+    {
+        if (defined('BASE_DIR')) {
+            return;
+        }
+        define('BASE_DIR', '/var/www/html/hal/2026/PH31/kenko_log/');
+    }
+
+    public static function isAuthenticated(): bool
+    {
+        return isset($_SESSION['user']);
+    }
+
+    public static function authUser(): void
+    {
+        if (!self::isAuthenticated()) {
+            header('Location: ' . BASE_URL . 'login/');
+            exit;
+        }
+    }
 }

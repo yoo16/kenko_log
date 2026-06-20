@@ -2,49 +2,45 @@
 require_once '../app.php';
 
 use Lib\Database;
+use Lib\App;
 
+// POSTリクエスト以外は受け付けない
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ./');
     exit;
 }
 
-$posts = [
-    'email' => trim($_POST['email'] ?? ''),
-    'password' => $_POST['password'] ?? '',
-    'csrf_token' => $_POST['csrf_token'] ?? '',
-];
+// POSTデータのサニタイズ
+$posts = App::sanitize($_POST);
+// 古い入力データをセッションに保存
+$_SESSION['login_old'] = $posts;
+// パスワードは古い入力値としてセッションに保存しない
+unset($_SESSION['login_old']['password']);
 
-$_SESSION['login_old'] = [
-    'email' => $posts['email'],
-];
-
+// バリデーション
 $errors = validateLoginInput($posts);
+
+// 認証
 $user = null;
-
 if (!$errors) {
-    $user = findUserByEmail($posts['email']);
-
-    // ユーザが存在しないか、パスワードが一致しない場合はエラー
-    if (!$user || !password_verify($posts['password'], $user['password_hash'])) {
+    $user = auth($posts['email'], $posts['password']);
+    if (!$user) {
         $errors[] = 'メールアドレスまたはパスワードが正しくありません。';
     }
 }
 
+// エラーがある場合はセッションに保存してリダイレクト
 if ($errors) {
     $_SESSION['login_errors'] = $errors;
     header('Location: ./');
     exit;
 }
 
-$_SESSION['user'] = [
-    'id' => (int) $user['id'],
-    'name' => $user['name'],
-    'email' => $user['email'],
-];
-
+// パスワードハッシュはセッションに保存しない
+unset($_SESSION['user']['password_hash']);
 // ログイン成功後は古い入力データをクリア
 unset($_SESSION['login_old']);
 
+// ログイン成功後はダッシュボードにリダイレクト
 header('Location: ' . BASE_URL . 'dashboard/');
 exit;
 
@@ -77,6 +73,18 @@ function findUserByEmail(string $email): ?array
     $stmt->execute([':email' => $email]);
     // ユーザを取得
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
     return $user ?: null;
+}
+
+function auth(string $email, string $password)
+{
+    // ユーザーをメールアドレスで検索
+    $user = findUserByEmail($email);
+    // ユーザがいて、かつパスワードが一致する場合はログイン成功
+    if ($user && password_verify($password, $user['password_hash'])) {
+        // セッションにユーザー情報を保存する
+        $_SESSION['user'] = $user;
+        return $user;
+    }
+    return null;
 }
